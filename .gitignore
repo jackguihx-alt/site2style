@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+coverage/
+dist/
+*.tgz
+*.zip
+*.log
+design.md
+DESIGN.md
+design-preview.html
+DESIGN-preview.html
+website-design-evidence-*.json
+website-design-evidence-*-artifacts/

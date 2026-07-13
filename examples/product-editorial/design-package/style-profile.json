@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "url": "https://example.com/fictional-product",
+    "viewportCount": 3,
+    "tooling": "playwright"
+  },
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 900,
+      "displayHeading": { "fontSize": "56px", "fontWeight": "600", "lineHeight": "60px" },
+      "navigation": { "height": 44 }
+    },
+    "tablet": {
+      "width": 1024,
+      "height": 768,
+      "displayHeading": { "fontSize": "48px", "fontWeight": "600", "lineHeight": "52px" },
+      "navigation": { "height": 44 }
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "displayHeading": { "fontSize": "32px", "fontWeight": "600", "lineHeight": "36px" },
+      "navigation": { "height": 48 }
+    }
+  },
+  "styleSignals": {
+    "colors": [
+      { "value": "rgb(28,28,30)", "count": 18 },
+      { "value": "rgb(255,255,255)", "count": 12 },
+      { "value": "rgb(245,245,247)", "count": 9 },
+      { "value": "rgb(0,102,204)", "count": 6 }
+    ],
+    "radii": [
+      { "value": "0px", "count": 24 },
+      { "value": "999px", "count": 6 }
+    ]
+  },
+  "imagery": {
+    "selectedSourceModes": [
+      { "value": "large", "count": 6 },
+      { "value": "medium", "count": 6 },
+      { "value": "small", "count": 6 }
+    ]
+  },
+  "interactions": { "capturedStates": [] },
+  "evidenceGaps": ["No interaction-state evidence was captured."]
+}

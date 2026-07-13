@@ -1,0 +1,56 @@
+{
+  "name": "site2style",
+  "version": "0.5.0",
+  "description": "Capture website design evidence and package transferable visual rules for AI agents",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "site2style": "bin/site2style.mjs",
+    "site2style-mcp": "mcp/server.mjs"
+  },
+  "scripts": {
+    "doctor": "node scripts/check-browser-tooling.mjs",
+    "mcp": "node mcp/server.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "validate": "node scripts/validate-package.mjs"
+  },
+  "files": [
+    ".cursor",
+    ".github",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "SECURITY.md",
+    "SKILL.md",
+    "LICENSE",
+    "agents",
+    "assets",
+    "bin",
+    "integrations",
+    "examples",
+    "lib",
+    "mcp",
+    "references",
+    "scripts"
+  ],
+  "keywords": [
+    "design-system",
+    "website-extraction",
+    "ai-agent",
+    "mcp",
+    "responsive-design",
+    "visual-regression"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "parse5": "^8.0.1",
+    "zod": "^4.4.3"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

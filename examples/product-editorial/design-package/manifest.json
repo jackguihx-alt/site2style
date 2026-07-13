@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "packageType": "website-design-language",
+  "packageId": "design-language-0dd741359bac",
+  "name": "Product Editorial Example",
+  "createdAt": "2026-07-13T03:44:42.813Z",
+  "source": {
+    "url": "https://example.com/fictional-product",
+    "capturedAt": null,
+    "viewportCount": 3
+  },
+  "entrypoints": {
+    "human": "START-HERE.html",
+    "preview": "style-board.html",
+    "agent": "AGENT-HANDOFF.md",
+    "style": "STYLE.md",
+    "machine": "style-profile.json"
+  },
+  "reuse": {
+    "instruction": "Ask any Agent to read AGENT-HANDOFF.md before creating or reviewing a design.",
+    "reExtractWhen": "The reference site changed or the evidence gaps block the new task."
+  },
+  "evidenceGaps": [
+    "No interaction-state evidence was captured."
+  ],
+  "files": [
+    {
+      "path": "START-HERE.md",
+      "role": "human-entrypoint",
+      "required": true
+    },
+    {
+      "path": "START-HERE.html",
+      "role": "human-entrypoint-html",
+      "required": true
+    },
+    {
+      "path": "AGENT-HANDOFF.md",
+      "role": "cross-session-agent-entrypoint",
+      "required": true
+    },
+    {
+      "path": "manifest.json",
+      "role": "package-manifest",
+      "required": true
+    },
+    {
+      "path": "STYLE.md",
+      "role": "agent-style-source",
+      "required": true
+    },
+    {
+      "path": "style-board.html",
+      "role": "human-preview",
+      "required": true
+    },
+    {
+      "path": "style-profile.json",
+      "role": "machine-measurements",
+      "required": true
+    }
+  ]
+}

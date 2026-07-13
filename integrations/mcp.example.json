@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "site2style": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/site2style/mcp/server.mjs"
+      ]
+    }
+  }
+}

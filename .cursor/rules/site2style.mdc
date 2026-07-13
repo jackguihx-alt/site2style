@@ -1,0 +1,6 @@
+---
+description: Extract and transfer website design language with the repository's portable CLI or MCP tools
+alwaysApply: true
+---
+
+For website style extraction, transfer, or reconstruction, read `SKILL.md`. Run `website-to-design doctor`, use the `full` viewport profile unless speed materially matters, and do not require a Cursor-specific browser integration. Default style work to `style-profile.json`, `STYLE.md`, and `style-board.html`, then run `website-to-design bundle` so the final `design-package/AGENT-HANDOFF.md` works in later sessions. For complete replicas, read `references/high-fidelity-reconstruction.md`, validate asset URLs, and audit original versus replica evidence before declaring completion.

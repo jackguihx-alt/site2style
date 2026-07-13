@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive evidence fixture</title>
+  <style>
+    :root { --capture-mode: large-tall; --accent: #146ef5; }
+    @media (min-width: 1069px) and (max-height: 775px) { :root { --capture-mode: large-short; } }
+    @media (min-width: 735px) and (max-width: 1068px) and (min-height: 734px) { :root { --capture-mode: medium-tall; } }
+    @media (min-width: 735px) and (max-width: 1068px) and (max-height: 733px) { :root { --capture-mode: medium-short; } }
+    @media (max-width: 734px) { :root { --capture-mode: small; } }
+    body { margin: 0; color: #111; background: #fff; font: 16px/1.5 system-ui, sans-serif; }
+    main { min-height: 1200px; padding: 32px; }
+    button { padding: 8px 14px; border: 1px solid #146ef5; background: #146ef5; color: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <svg class="fixture-icon" viewBox="0 0 16 16" width="16" height="16" aria-label="Fixture icon"><circle cx="8" cy="8" r="6"></circle></svg>
+    <h1>Responsive fixture</h1>
+    <section class="hero-card" aria-label="Responsive hero">
+      <picture>
+        <source media="(max-width: 734px)" srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='390' height='200'%3E%3Crect width='100%25' height='100%25' fill='red'/%3E%3C/svg%3E">
+        <source media="(max-width: 1068px)" srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='300'%3E%3Crect width='100%25' height='100%25' fill='green'/%3E%3C/svg%3E">
+        <source media="(max-width: 1068px)" srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='300'%3E%3Crect width='100%25' height='100%25' fill='green'/%3E%3C/svg%3E">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='400'%3E%3Crect width='100%25' height='100%25' fill='blue'/%3E%3C/svg%3E" alt="Responsive fixture image">
+      </picture>
+    </section>
+    <section aria-label="Gallery">
+      <ul class="media-gallery-item-container">
+        <li class="media-gallery-item" role="tabpanel" aria-label="Gallery item one">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect width='100%25' height='100%25' fill='gold'/%3E%3C/svg%3E" alt="Gallery fixture image">
+        </li>
+      </ul>
+    </section>
+    <button type="button">Inspect hover</button>
+  </main>
+  <footer>
+    <section class="site-footer-column-section">
+      <h2 class="site-footer-column-section-title-text">Resources</h2>
+      <a class="site-footer-column-section-link" href="#docs">Documentation</a>
+    </section>
+  </footer>
+</body>
+</html>
