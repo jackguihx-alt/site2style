@@ -1,8 +1,14 @@
-# Site2Style
+# HTML2Style
+
+[Project page (中文 / English)](docs/index.html) · [Open the output example](examples/product-editorial/design-package/START-HERE.html)
+
+![HTML2Style bilingual project page](https://raw.githubusercontent.com/jackguihx-alt/html2style/main/docs/assets/homepage.png)
 
 **One site in. A reusable design evidence package out.**
 
-`site2style` captures rendered pages across responsive conditions, measures their visual system, and turns the evidence into files that another Agent can inspect, apply, and verify. It is designed for style extraction first, with optional full design-system documentation and reconstruction auditing.
+`html2style` captures rendered pages across responsive conditions, measures their visual system, and turns the evidence into files that another Agent can inspect, apply, and verify. It is designed for style extraction first, with optional full design-system documentation and reconstruction auditing.
+
+Despite the name, the input can be a live URL, a local HTML file, or a manually authenticated browser session. “HTML” means the rendered web interface, not static source alone.
 
 ```text
 URL -> browser evidence -> STYLE.md + profile + board -> design-package/
@@ -41,7 +47,7 @@ The important test was no longer “Can an Agent copy this page?” It became:
 
 > Can an Agent explain why the design works, carry those principles into a different product, and prove which parts were measured rather than guessed?
 
-`site2style` is the open-source answer to that question. It does not treat a screenshot as a design system or a brand as a style preset. It turns browser evidence into rules, transfer boundaries, and a reusable handoff.
+`html2style` is the open-source answer to that question. It does not treat a screenshot as a design system or a brand as a style preset. It turns browser evidence into rules, transfer boundaries, and a reusable handoff.
 
 ## What it produces
 
@@ -83,16 +89,16 @@ Requirements: Node.js 20+ and Chrome, Chromium, Edge, or Playwright Chromium.
 npm install
 npm run doctor
 
-node bin/site2style.mjs extract https://example.com evidence.json --profile full
-node bin/site2style.mjs profile evidence.json style-profile.json --markdown STYLE-measurements.md
+node bin/html2style.mjs extract https://example.com evidence.json --profile full
+node bin/html2style.mjs profile evidence.json style-profile.json --markdown STYLE-measurements.md
 cp assets/STYLE.template.md STYLE.md
 ```
 
 Ask your Agent to read `SKILL.md`, `STYLE-measurements.md`, and `assets/STYLE.template.md`, then synthesize `STYLE.md`. Every important design rule should cite its measured support and confidence. Render the result:
 
 ```bash
-node bin/site2style.mjs preview STYLE.md style-board.html
-node bin/site2style.mjs bundle design-package \
+node bin/html2style.mjs preview STYLE.md style-board.html
+node bin/html2style.mjs bundle design-package \
   --style STYLE.md \
   --profile style-profile.json \
   --board style-board.html \
@@ -118,7 +124,7 @@ npx playwright install chromium
 For a login-gated page, use a visible temporary browser profile and sign in manually:
 
 ```bash
-node bin/site2style.mjs extract https://example.com evidence.json --headed --login-wait 60
+node bin/html2style.mjs extract https://example.com evidence.json --headed --login-wait 60
 ```
 
 The project does not request or store credentials.
@@ -143,8 +149,8 @@ The result describes how the design works without treating source branding, copy
 Use `assets/DESIGN.template.md` to create `DESIGN.md`, then render it:
 
 ```bash
-node bin/site2style.mjs icons --from-evidence evidence.json --out icons
-node bin/site2style.mjs preview DESIGN.md design-system.html
+node bin/html2style.mjs icons --from-evidence evidence.json --out icons
+node bin/html2style.mjs preview DESIGN.md design-system.html
 ```
 
 This mode adds component states, page patterns, icon evidence, content voice, and implementation anchors.
@@ -154,10 +160,10 @@ This mode adds component states, page patterns, icon evidence, content voice, an
 Use this only when replication is permitted and intended:
 
 ```bash
-node bin/site2style.mjs assets replica.html --base-url https://example.com
-node bin/site2style.mjs extract ./replica.html replica-evidence.json --profile full
-node bin/site2style.mjs audit evidence.json replica-evidence.json --mode complete
-node bin/site2style.mjs compare original.png replica.png comparison.html
+node bin/html2style.mjs assets replica.html --base-url https://example.com
+node bin/html2style.mjs extract ./replica.html replica-evidence.json --profile full
+node bin/html2style.mjs audit evidence.json replica-evidence.json --mode complete
+node bin/html2style.mjs compare original.png replica.png comparison.html
 ```
 
 The complete audit checks viewport coverage, document height, structural counts, gallery order, footer groups, placeholders, broken media, responsive source mappings, and separate owner/rendered/intrinsic image geometry.
@@ -202,9 +208,9 @@ npm run mcp
 ```json
 {
   "mcpServers": {
-    "site2style": {
+    "html2style": {
       "command": "node",
-      "args": ["/absolute/path/to/site2style/mcp/server.mjs"]
+      "args": ["/absolute/path/to/html2style/mcp/server.mjs"]
     }
   }
 }
@@ -232,7 +238,7 @@ Website design extraction is an active category. These adjacent projects are use
 - [Dembrandt](https://github.com/thevangelist/dembrandt) extracts design tokens, brand signals, and `DESIGN.md` through a CLI and MCP server.
 - [brandmd](https://github.com/yuvrajangadsingh/brandmd) extracts a multi-page design system into agent-readable formats.
 
-Site2Style focuses on a different handoff problem: preserving responsive browser evidence, separating measurements from interpretation, marking what may or may not be transferred, auditing reconstruction completeness, and delivering the result as one cross-session package. It does not import a page into Figma, claim ownership of captured material, or treat third-party brand assets as reusable output.
+HTML2Style focuses on a different handoff problem: preserving responsive browser evidence, separating measurements from interpretation, marking what may or may not be transferred, auditing reconstruction completeness, and delivering the result as one cross-session package. It does not import a page into Figma, claim ownership of captured material, or treat third-party brand assets as reusable output.
 
 ## Responsible use
 

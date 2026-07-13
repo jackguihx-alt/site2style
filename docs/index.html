@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta
+      name="description"
+      content="HTML2Style captures rendered website evidence and turns it into a portable design-language package for AI agents."
+    />
+    <title>HTML2Style | Website design evidence for every Agent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="HTML2Style home">
+        <span class="brand-mark" aria-hidden="true">H2S</span>
+        <span>HTML2Style</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" title="Menu">
+        <span aria-hidden="true">☰</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="#story" data-i18n="navStory">故事</a>
+        <a href="#package" data-i18n="navPackage">产物</a>
+        <a href="#workflow" data-i18n="navWorkflow">流程</a>
+        <a href="#agents" data-i18n="navAgents">Agent</a>
+        <a href="#compare" data-i18n="navCompare">差异</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="language-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="github-link" href="https://github.com/jackguihx-alt/html2style" target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy shell">
+          <p class="eyebrow"><span class="status-dot"></span><span data-i18n="heroEyebrow">开源 · MIT · Agent 中立</span></p>
+          <h1>HTML2Style</h1>
+          <p class="hero-title" data-i18n="heroTitle">把一个网站，变成任何 Agent 都能复用的设计语言。</p>
+          <p class="hero-summary" data-i18n="heroSummary">
+            采集真实浏览器证据，分离测量与判断，交付一个可跨项目、跨模型、跨 session 使用的 design-package。
+          </p>
+
+          <div class="hero-actions-row">
+            <a class="button button-primary" href="https://github.com/jackguihx-alt/html2style" target="_blank" rel="noreferrer">
+              <span data-i18n="viewGithub">查看 GitHub</span><span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-secondary" href="../examples/product-editorial/design-package/START-HERE.html">
+              <span data-i18n="openExample">打开真实示例</span><span aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div class="command-bar" aria-label="Install command">
+            <span class="command-prompt" aria-hidden="true">$</span>
+            <code>git clone https://github.com/jackguihx-alt/html2style.git</code>
+            <button class="copy-button" type="button" data-copy="git clone https://github.com/jackguihx-alt/html2style.git" data-i18n="copy">
+              复制
+            </button>
+          </div>
+        </div>
+
+        <figure class="hero-product" aria-labelledby="hero-product-caption">
+          <div class="window-bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <strong>style-board.html</strong>
+          </div>
+          <img src="./assets/style-board.png" alt="HTML2Style generated style board showing design rules and source evidence" />
+          <figcaption id="hero-product-caption" data-i18n="heroCaption">真实输出：可读的设计规则与可追溯的测量证据并排呈现。</figcaption>
+        </figure>
+      </section>
+
+      <section class="proof-strip" aria-label="Project proof">
+        <div class="shell proof-grid">
+          <div><strong>5</strong><span data-i18n="proofViewports">响应式条件</span></div>
+          <div><strong>3</strong><span data-i18n="proofEntrypoints">人类 / Agent / 机器入口</span></div>
+          <div><strong>13</strong><span data-i18n="proofTests">自动化测试</span></div>
+          <div><strong>0</strong><span data-i18n="proofVulns">已知依赖漏洞</span></div>
+        </div>
+      </section>
+
+      <section class="story section" id="story">
+        <div class="shell story-layout">
+          <div class="section-heading">
+            <p class="section-index">01 / WHY</p>
+            <h2 data-i18n="storyTitle">“像”不是最终标准。</h2>
+          </div>
+          <div class="story-copy">
+            <p class="lead" data-i18n="storyLead">真正难的不是抄出黑字、白底和蓝按钮，而是找出页面为什么成立。</p>
+            <p data-i18n="storyBody">
+              第一次复刻看起来很接近，但图标缺失、图片裁切错误、移动端素材不对、页面也不完整。继续写提示词解决不了问题，因为 Agent 拿到的是印象，不是系统。
+            </p>
+            <blockquote data-i18n="storyQuote">HTML2Style 把“看起来像”改写成“有证据、能迁移、可验证”。</blockquote>
+          </div>
+        </div>
+        <div class="shell failure-list" role="list">
+          <div role="listitem"><span>01</span><strong data-i18n="failureIcons">图标不再遗漏</strong><p data-i18n="failureIconsBody">采集 inline SVG、sprite 与渲染尺寸。</p></div>
+          <div role="listitem"><span>02</span><strong data-i18n="failureImages">图片不再猜裁切</strong><p data-i18n="failureImagesBody">区分容器、渲染和原始几何。</p></div>
+          <div role="listitem"><span>03</span><strong data-i18n="failureResponsive">移动端不再靠缩小</strong><p data-i18n="failureResponsiveBody">记录 picture、srcset 与高度条件。</p></div>
+          <div role="listitem"><span>04</span><strong data-i18n="failureComplete">完整度不再凭感觉</strong><p data-i18n="failureCompleteBody">审计结构、数量、页高与资源健康。</p></div>
+        </div>
+      </section>
+
+      <section class="package-section section" id="package">
+        <div class="shell">
+          <div class="section-heading section-heading-wide">
+            <div>
+              <p class="section-index">02 / OUTPUT</p>
+              <h2 data-i18n="packageTitle">一个文件夹，三种入口。</h2>
+            </div>
+            <p data-i18n="packageSummary">不再让用户面对一堆不知道先开哪个的文件。每个 design-package 都从同一个清晰入口开始。</p>
+          </div>
+
+          <div class="package-demo">
+            <div class="role-tabs" role="tablist" aria-label="Package entry points">
+              <button type="button" role="tab" aria-selected="true" aria-controls="role-panel" data-role="human" data-i18n="roleHuman">人类</button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="role-panel" data-role="agent">Agent</button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="role-panel" data-role="machine" data-i18n="roleMachine">机器</button>
+            </div>
+
+            <div class="package-content">
+              <div class="role-panel" id="role-panel" role="tabpanel">
+                <p class="role-label" id="role-label">START-HERE.html</p>
+                <h3 id="role-title" data-i18n="roleHumanTitle">先看结果，再决定下一步。</h3>
+                <p id="role-body" data-i18n="roleHumanBody">双击打开，浏览视觉板、复制跨 session 提示词，并找到适合设计评审、开发或自动化的入口。</p>
+                <a id="role-link" href="../examples/product-editorial/design-package/START-HERE.html">
+                  <span data-i18n="viewFile">查看文件</span><span aria-hidden="true">→</span>
+                </a>
+              </div>
+              <figure class="package-preview">
+                <img src="./assets/start-here.png" alt="HTML2Style START-HERE package entry page" />
+              </figure>
+            </div>
+          </div>
+
+          <div class="file-grid" aria-label="Generated files">
+            <article><code>STYLE.md</code><p data-i18n="fileStyle">可迁移的视觉规则与设计边界。</p></article>
+            <article><code>style-profile.json</code><p data-i18n="fileProfile">工具可直接读取的确定性测量。</p></article>
+            <article><code>style-board.html</code><p data-i18n="fileBoard">给人类评审的视觉呈现。</p></article>
+            <article><code>AGENT-HANDOFF.md</code><p data-i18n="fileHandoff">新 session 的自包含上下文。</p></article>
+            <article><code>manifest.json</code><p data-i18n="fileManifest">稳定 ID、文件角色和证据缺口。</p></article>
+            <article><code>evidence/</code><p data-i18n="fileEvidence">截图、DOM、资源与响应式来源。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow section" id="workflow">
+        <div class="shell">
+          <div class="section-heading section-heading-wide">
+            <div>
+              <p class="section-index">03 / WORKFLOW</p>
+              <h2 data-i18n="workflowTitle">从页面到可复用设计语言。</h2>
+            </div>
+            <p data-i18n="workflowSummary">每一步都留下可检查的中间产物。Agent 可以解释结论来自哪里，而不是把猜测包装成规则。</p>
+          </div>
+
+          <ol class="workflow-steps">
+            <li><span>01</span><strong data-i18n="stepObserve">观察</strong><p data-i18n="stepObserveBody">在宽度和高度条件下渲染真实页面。</p></li>
+            <li><span>02</span><strong data-i18n="stepMeasure">测量</strong><p data-i18n="stepMeasureBody">采集字体、颜色、间距、图片、图标与结构。</p></li>
+            <li><span>03</span><strong data-i18n="stepDistill">提炼</strong><p data-i18n="stepDistillBody">分开确定性证据与 Agent 设计判断。</p></li>
+            <li><span>04</span><strong data-i18n="stepTransfer">迁移</strong><p data-i18n="stepTransferBody">保留设计逻辑，替换品牌身份和受保护素材。</p></li>
+            <li><span>05</span><strong data-i18n="stepVerify">验证</strong><p data-i18n="stepVerifyBody">检查资源、响应式覆盖与完整复刻范围。</p></li>
+          </ol>
+
+          <div class="transfer-band">
+            <div>
+              <p class="transfer-kicker" data-i18n="transferKeep">保留 / RETAIN</p>
+              <p data-i18n="transferKeepBody">层级、节奏、密度、形状、图片策略、响应式逻辑。</p>
+            </div>
+            <div>
+              <p class="transfer-kicker" data-i18n="transferReplace">替换 / REPLACE</p>
+              <p data-i18n="transferReplaceBody">Logo、品牌文案、专有摄影、图标和独特 campaign 概念。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="agents section" id="agents">
+        <div class="shell agents-layout">
+          <div class="agents-copy">
+            <p class="section-index">04 / PORTABLE</p>
+            <h2 data-i18n="agentsTitle">不绑定某一个 Agent。</h2>
+            <p data-i18n="agentsSummary">运行时是 CLI 与 MCP。Skill、AGENTS.md、CLAUDE.md、Cursor 和 Copilot 文件只是发现层，不是依赖。</p>
+            <div class="agent-list" aria-label="Supported interfaces">
+              <span>CLI</span><span>MCP</span><span>SKILL.md</span><span>AGENTS.md</span><span>CLAUDE.md</span><span>Cursor</span><span>Copilot</span>
+            </div>
+          </div>
+
+          <div class="terminal" aria-label="HTML2Style command example">
+            <div class="terminal-bar"><span></span><span></span><span></span><strong>html2style</strong></div>
+            <pre><code><span class="comment"># 1. Check the portable browser chain</span>
+$ html2style doctor
+
+<span class="comment"># 2. Capture five responsive conditions</span>
+$ html2style extract https://example.com \
+    evidence.json --profile full
+
+<span class="comment"># 3. Create one cross-session package</span>
+$ html2style bundle design-package \
+    --style STYLE.md \
+    --profile style-profile.json \
+    --board style-board.html</code></pre>
+            <button class="terminal-copy" type="button" data-copy="html2style extract https://example.com evidence.json --profile full" data-i18n="copyCommand">复制命令</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="compare section" id="compare">
+        <div class="shell">
+          <div class="section-heading section-heading-wide">
+            <div>
+              <p class="section-index">05 / POSITION</p>
+              <h2 data-i18n="compareTitle">不是网页转 Figma，也不只是提取 Token。</h2>
+            </div>
+            <p data-i18n="compareSummary">HTML2Style 解决的是设计上下文交接：让另一个 Agent 在另一个 session 中，仍然知道什么被测量、什么可迁移、什么必须替换。</p>
+          </div>
+
+          <div class="comparison-table" role="table" aria-label="Project category comparison">
+            <div class="comparison-row comparison-head" role="row">
+              <div role="columnheader" data-i18n="compareCategory">类别</div>
+              <div role="columnheader" data-i18n="comparePrimary">主要结果</div>
+              <div role="columnheader" data-i18n="compareStrength">适合场景</div>
+            </div>
+            <div class="comparison-row" role="row">
+              <div role="cell" data-i18n="compareFigma">网页转 Figma</div>
+              <div role="cell" data-i18n="compareFigmaResult">可编辑画布</div>
+              <div role="cell" data-i18n="compareFigmaUse">视觉重设计与协作</div>
+            </div>
+            <div class="comparison-row" role="row">
+              <div role="cell" data-i18n="compareTokens">Token 提取器</div>
+              <div role="cell" data-i18n="compareTokensResult">颜色、字体、间距与变量</div>
+              <div role="cell" data-i18n="compareTokensUse">快速品牌或前端基础配置</div>
+            </div>
+            <div class="comparison-row is-highlight" role="row">
+              <div role="cell">HTML2Style</div>
+              <div role="cell" data-i18n="compareH2SResult">证据 + 规则 + 边界 + 交接包</div>
+              <div role="cell" data-i18n="compareH2SUse">跨 Agent 迁移、完整复刻与验证</div>
+            </div>
+          </div>
+
+          <p class="related-note">
+            <span data-i18n="relatedNote">相关项目与范围差异已透明记录在 README，包括 Website to Design、DesignDNA、Dembrandt 和 brandmd。</span>
+            <a href="https://github.com/jackguihx-alt/html2style#related-work-and-scope" target="_blank" rel="noreferrer" data-i18n="readRelated">查看说明 ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="shell">
+          <p class="section-index">OPEN SOURCE / MIT</p>
+          <h2 data-i18n="ctaTitle">不要再让 Agent 只看一张截图猜设计。</h2>
+          <p data-i18n="ctaBody">给它证据、规则和边界。然后把整个设计语言带到下一个项目。</p>
+          <div class="hero-actions-row">
+            <a class="button button-dark" href="https://github.com/jackguihx-alt/html2style" target="_blank" rel="noreferrer">
+              <span data-i18n="startGithub">从 GitHub 开始</span><span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-on-color" href="../examples/product-editorial/design-package/style-board.html">
+              <span data-i18n="viewOutput">查看完整输出</span><span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div><strong>HTML2Style</strong><p data-i18n="footerLine">Website design evidence for every Agent.</p></div>
+        <div class="footer-links">
+          <a href="https://github.com/jackguihx-alt/html2style" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="../README.md">README</a>
+          <a href="../LICENSE">MIT License</a>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

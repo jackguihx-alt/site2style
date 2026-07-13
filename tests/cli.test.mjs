@@ -21,7 +21,7 @@ test("full profile covers five responsive source conditions", () => {
 });
 
 test("CLI exposes portable commands", () => {
-  const result = spawnSync(process.execPath, [path.join(root, "bin/site2style.mjs"), "--help"], {
+  const result = spawnSync(process.execPath, [path.join(root, "bin/html2style.mjs"), "--help"], {
     cwd: root,
     encoding: "utf8",
   });

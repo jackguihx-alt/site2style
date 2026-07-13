@@ -10,7 +10,7 @@ import { z } from "zod";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const server = new McpServer(
-  { name: "site2style", version: "0.5.0" },
+  { name: "html2style", version: "0.5.0" },
   {
     instructions:
       "Use browser_doctor first, then extract_website_evidence. For style-only work, call extract_style_profile and synthesize STYLE.md before any implementation. Generate DESIGN.md for replica-specific detail. For complete replicas, validate all asset URLs and audit original versus replica evidence before declaring success. For original sites inspired by a reference, transfer measured design principles while replacing source branding, content, assets, and information architecture.",

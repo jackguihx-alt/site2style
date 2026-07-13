@@ -34,15 +34,15 @@ Users who already have Google Chrome, Chromium, or Microsoft Edge normally do no
 ## CLI Interface
 
 ```bash
-site2style doctor
-site2style extract https://example.com evidence.json --profile full
+html2style doctor
+html2style extract https://example.com evidence.json --profile full
 ```
 
 Browser selection can be forced for debugging:
 
 ```bash
-site2style extract https://example.com evidence.json --backend playwright
-site2style extract https://example.com evidence.json --backend chrome
+html2style extract https://example.com evidence.json --backend playwright
+html2style extract https://example.com evidence.json --backend chrome
 ```
 
 The default `auto` mode tries every detected backend in order and records failed attempts in the evidence JSON.
@@ -54,9 +54,9 @@ For any MCP-compatible Agent, configure a local stdio server:
 ```json
 {
   "mcpServers": {
-    "site2style": {
+    "html2style": {
       "command": "node",
-      "args": ["/absolute/path/to/site2style/mcp/server.mjs"]
+      "args": ["/absolute/path/to/html2style/mcp/server.mjs"]
     }
   }
 }
@@ -79,7 +79,7 @@ Different MCP clients store configuration in different locations. Keep the serve
 Use a visible temporary browser and provide a fixed login window:
 
 ```bash
-site2style extract https://example.com evidence.json --headed --login-wait 60
+html2style extract https://example.com evidence.json --headed --login-wait 60
 ```
 
 The user signs in directly in the browser window. Never request credentials in chat or automate MFA bypass. The temporary browser profile is deleted after extraction.
@@ -101,7 +101,7 @@ Use `full` when the page uses `<picture>` media conditions based on viewport hei
 Run the doctor, then force the system browser:
 
 ```bash
-site2style extract https://example.com evidence.json --backend chrome
+html2style extract https://example.com evidence.json --backend chrome
 ```
 
 Automatic mode already falls back from Playwright to the system browser. The final evidence records `attemptedBackends` and `backendErrors`.

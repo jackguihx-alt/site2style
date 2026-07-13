@@ -128,7 +128,7 @@ function parseArgs(args) {
 
 function printUsage() {
   console.error(`Usage:
-  site2style bundle <output-dir> --style STYLE.md --profile style-profile.json --board style-board.html [options]
+  html2style bundle <output-dir> --style STYLE.md --profile style-profile.json --board style-board.html [options]
 
 Options:
   --name <name>                 Human-readable package name

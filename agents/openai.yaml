@@ -1,4 +1,4 @@
 interface:
-  display_name: "Site2Style"
-  short_description: "Turn one website into reusable design evidence"
-  default_prompt: "Use $site2style to capture this website and deliver one reusable cross-session design package."
+  display_name: "HTML2Style"
+  short_description: "Turn a rendered website into reusable design evidence"
+  default_prompt: "Use $html2style to capture this website and deliver one reusable cross-session design package."

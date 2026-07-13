@@ -14,7 +14,7 @@ const required = [
   "SECURITY.md",
   "package.json",
   ".github/workflows/ci.yml",
-  "bin/site2style.mjs",
+  "bin/html2style.mjs",
   "mcp/server.mjs",
   "scripts/extract-browser-evidence.mjs",
   "scripts/extract-style-profile.mjs",
@@ -46,12 +46,12 @@ for (const relativePath of required) {
 }
 
 const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
-if (!skill.startsWith("---\n") || !/\nname: site2style\n/.test(skill) || !/\ndescription: .+\n/.test(skill)) {
+if (!skill.startsWith("---\n") || !/\nname: html2style\n/.test(skill) || !/\ndescription: .+\n/.test(skill)) {
   throw new Error("SKILL.md frontmatter is invalid");
 }
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
-if (packageJson.type !== "module" || !packageJson.bin?.["site2style"] || !packageJson.bin?.["site2style-mcp"]) {
+if (packageJson.type !== "module" || !packageJson.bin?.["html2style"] || !packageJson.bin?.["html2style-mcp"]) {
   throw new Error("package.json is missing portable CLI or MCP entry points");
 }
 if (!packageJson.dependencies?.parse5) {
@@ -65,7 +65,7 @@ for (const filePath of listFiles(root).filter((filePath) => filePath.endsWith(".
   }
 }
 
-const help = spawnSync(process.execPath, [path.join(root, "bin/site2style.mjs"), "--help"], {
+const help = spawnSync(process.execPath, [path.join(root, "bin/html2style.mjs"), "--help"], {
   cwd: root,
   encoding: "utf8",
 });

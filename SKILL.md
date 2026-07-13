@@ -1,9 +1,9 @@
 ---
-name: site2style
+name: html2style
 description: Capture one or more live websites as an evidence-backed, transferable design-language package with an Agent-neutral CLI or MCP interface. Deliver responsive browser evidence, style-profile.json, STYLE.md, a visual HTML style board, and optionally DESIGN.md, assets, icons, a complete reconstruction, or an original site using the measured design logic. Use when the user asks to extract or learn a website's style, reverse-engineer a design system, create a site inspired by a reference without copying its brand, improve DESIGN.md, collect tokens/assets/components/icons, replicate a permitted website, or audit visual fidelity.
 ---
 
-# Site2Style
+# HTML2Style
 
 Turn a real website into portable design evidence and reusable visual rules that another Agent can apply without depending on the original page or a vendor-specific browser.
 
@@ -35,7 +35,7 @@ Use evidence from the live page first: DOM, computed styles, CSS variables, netw
    - Complete replication: inventory and reproduce every visible section and repeated item. Do not silently downgrade this to a representative sample.
    - Design-language transfer: user gives a reference site or `DESIGN.md` plus a new purpose, create an original information architecture and content system using the transferable design principles.
 2. Check tool fit:
-   - Run `site2style doctor` or the MCP `browser_doctor` tool first.
+   - Run `html2style doctor` or the MCP `browser_doctor` tool first.
    - Use the bundled Agent-neutral browser pipeline when the page needs JavaScript rendering, login, computed styles, CSS variables, SVG sprites, screenshots, or interaction states.
    - A host Agent's own browser tool may supplement inspection, but it must not be a requirement for the workflow.
    - Use static fetch only when the public HTML already contains the target content and precise computed styles are not required.
@@ -52,7 +52,7 @@ Use evidence from the live page first: DOM, computed styles, CSS variables, netw
 
 ## Portability Contract
 
-- Any Agent with shell access can use the `site2style` CLI.
+- Any Agent with shell access can use the `html2style` CLI.
 - Any MCP-compatible Agent can use the bundled stdio server in `mcp/server.mjs`.
 - `SKILL.md`, `AGENTS.md`, and vendor adapter files are discovery aids, not runtime dependencies.
 - Do not require Codex In-app Browser, Claude browser tools, Cursor browser tools, or another vendor-specific integration.
@@ -78,12 +78,12 @@ Use `references/website-reading-checklist.md` for extraction passes. Read `refer
 Use this as the default when the user says "extract the style", "learn this visual language", "make a style package", or wants to tell a design-transfer story.
 
 1. Capture browser evidence at the full responsive profile.
-2. Run `site2style profile evidence.json style-profile.json --markdown STYLE-measurements.md`.
+2. Run `html2style profile evidence.json style-profile.json --markdown STYLE-measurements.md`.
 3. Read `assets/STYLE.template.md` and synthesize `STYLE.md` from measured evidence.
 4. For each design-DNA claim, separate observation, measurement, transferable rule, and confidence.
 5. Split source material into `retain`, `reinterpret`, and `replace`. Brand marks, source copy, proprietary imagery, and distinctive campaign concepts belong in `replace` by default.
 6. Render `STYLE.md` to `style-board.html` for human review.
-7. Run `site2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html`, including measurements/evidence as optional inputs.
+7. Run `html2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html`, including measurements/evidence as optional inputs.
 8. Deliver `design-package/` as the primary result. Stop there unless the user explicitly asks for a replica or transfer implementation.
 
 Do not treat a color list or component inventory as a style. A useful style package must explain hierarchy, rhythm, density, contrast, shape, imagery, motion, and responsive transformation.
@@ -118,12 +118,12 @@ For this mode, deliver a short transfer brief that records what was retained, wh
 
 Prefer the portable CLI or bundled MCP tools. Direct scripts remain available for automation and debugging:
 
-- `site2style doctor` / MCP `browser_doctor`: detects Playwright and local Chromium browsers without assuming an Agent platform.
-- `site2style extract <url> [outPath] [--profile full] [--headed] [--login-wait 60]`: collects responsive DOM, computed styles, assets, SVG data, and reference screenshots with automatic backend fallback.
-- `site2style profile <evidence> [style-profile.json] [--markdown STYLE-measurements.md]`: converts evidence into deterministic style signals for Agent synthesis.
-- `site2style bundle <output-dir> --style STYLE.md --profile style-profile.json --board style-board.html [--evidence evidence.json]`: creates the portable, cross-session final delivery.
-- `site2style assets <html-or-evidence> [--base-url <url>]`: validates every image/source/background URL before visual review.
-- `site2style audit <original-evidence> <replica-evidence> [--mode complete]`: audits viewport, structure, item counts, document height, placeholders, and broken assets.
+- `html2style doctor` / MCP `browser_doctor`: detects Playwright and local Chromium browsers without assuming an Agent platform.
+- `html2style extract <url> [outPath] [--profile full] [--headed] [--login-wait 60]`: collects responsive DOM, computed styles, assets, SVG data, and reference screenshots with automatic backend fallback.
+- `html2style profile <evidence> [style-profile.json] [--markdown STYLE-measurements.md]`: converts evidence into deterministic style signals for Agent synthesis.
+- `html2style bundle <output-dir> --style STYLE.md --profile style-profile.json --board style-board.html [--evidence evidence.json]`: creates the portable, cross-session final delivery.
+- `html2style assets <html-or-evidence> [--base-url <url>]`: validates every image/source/background URL before visual review.
+- `html2style audit <original-evidence> <replica-evidence> [--mode complete]`: audits viewport, structure, item counts, document height, placeholders, and broken assets.
 - `scripts/extract-icons.mjs --from-evidence evidence.json --out ./icons --prefix=<prefix>`: exports sprite and inline SVG icons and builds the searchable icon HTML.
 - `scripts/render-design-preview.mjs DESIGN.md design-system.html`: renders the visual HTML presentation from the design document.
 - `scripts/render-visual-comparison.mjs original.png replica.png comparison.html`: generates a self-contained side-by-side and overlay comparison page.

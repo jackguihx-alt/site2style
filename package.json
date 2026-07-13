@@ -1,5 +1,5 @@
 {
-  "name": "site2style",
+  "name": "html2style",
   "version": "0.5.0",
   "description": "Capture website design evidence and package transferable visual rules for AI agents",
   "type": "module",
@@ -8,8 +8,8 @@
     "node": ">=20"
   },
   "bin": {
-    "site2style": "bin/site2style.mjs",
-    "site2style-mcp": "mcp/server.mjs"
+    "html2style": "bin/html2style.mjs",
+    "html2style-mcp": "mcp/server.mjs"
   },
   "scripts": {
     "doctor": "node scripts/check-browser-tooling.mjs",

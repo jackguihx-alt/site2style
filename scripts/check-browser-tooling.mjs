@@ -11,7 +11,7 @@ if (json) {
   process.exit(summary.ready ? 0 : 1);
 }
 
-console.log("=== site2style browser doctor ===\n");
+console.log("=== html2style browser doctor ===\n");
 console.log(`platform:           ${summary.platform}`);
 console.log(`node:               ${summary.node}`);
 console.log(`Playwright package: ${summary.playwright ? `${summary.playwright.package} (${summary.playwright.entryPath})` : "not found"}`);

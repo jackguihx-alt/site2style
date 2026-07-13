@@ -16,7 +16,7 @@ test("browser extraction records every full-profile viewport and picture source"
     return;
   }
 
-  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "site2style-test-"));
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "html2style-test-"));
   const outputPath = path.join(outputDir, "evidence.json");
   const fixtureUrl = pathToFileURL(path.join(root, "tests/fixtures/responsive.html")).href;
   const result = spawnSync(

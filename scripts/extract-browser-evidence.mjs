@@ -1317,7 +1317,7 @@ async function main() {
       "  1. npm install && npx playwright install chromium\n" +
       "  2. Google Chrome, Chromium, or Microsoft Edge\n" +
       "  3. agent-browser CLI (legacy)\n\n" +
-      "Run `site2style doctor` to inspect this machine."
+      "Run `html2style doctor` to inspect this machine."
     );
   }
 

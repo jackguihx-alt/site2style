@@ -7,7 +7,7 @@
 ### 工具选择
 
 - 可先用任意 HTTP 客户端检查原始 HTML。若 HTML 已含目标内容（纯静态页），可先做静态提取。
-- 需 DOM/computed style/CSS 变量/SVG sprite/远程资源/登录态时，运行 `site2style doctor`，再用 CLI 或 MCP 采集。
+- 需 DOM/computed style/CSS 变量/SVG sprite/远程资源/登录态时，运行 `html2style doctor`，再用 CLI 或 MCP 采集。
 - 不要求 Agent 自带浏览器插件；未发现 Playwright 或系统 Chromium 浏览器时，按 `browser-tooling-bootstrap.md` 引导安装。
 
 ### 登录态
@@ -145,7 +145,7 @@ document.querySelectorAll('symbol[id^="前缀-"]') + innerHTML
 2. 用 `asset-manifest.json` 建立页面位置到真实图片、字体、logo 和图标的映射。
 3. 明确当前交付是代表性设计系统样例，还是包含全部区块与重复项目的完整网页复刻。
 4. 分开记录视口、外层容器、图片渲染区域和图片原始尺寸；不要把方形素材误当成卡片尺寸。
-5. 运行 `site2style assets` 检查所有图片、`srcset` 与 CSS 背景，再运行 `site2style audit` 对照原站与复刻证据。
+5. 运行 `html2style assets` 检查所有图片、`srcset` 与 CSS 背景，再运行 `html2style audit` 对照原站与复刻证据。
 6. 用 `render-visual-comparison.mjs` 生成并排/叠加对照页。
 7. 按“结构与数量 → 几何尺寸 → 真实素材与图标 → 字体 → 颜色与层次 → 响应式 → 状态动效”的顺序修正。
 8. 首屏或任一承诺范围仍有明显错位、缺图、错图标、错字体、低对比度、重叠、空白卡片或移动端溢出时，不得宣称高保真完成。

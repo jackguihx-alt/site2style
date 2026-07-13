@@ -40,7 +40,7 @@ if (command === "mcp") {
 }
 
 function printHelp() {
-  console.log(`site2style
+  console.log(`html2style
 
 Agent-neutral website design-system extraction.
 
@@ -57,13 +57,13 @@ Commands:
   mcp                             Start the stdio MCP server
 
 Examples:
-  site2style doctor
-  site2style extract https://example.com evidence.json --profile full
-  site2style extract https://example.com evidence.json --headed --login-wait 60
-  site2style icons --from-evidence evidence.json --out icons
-  site2style profile evidence.json style-profile.json --markdown STYLE-measurements.md
-  site2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html
-  site2style assets replica.html --base-url https://example.com
-  site2style audit original.json replica.json --mode complete
+  html2style doctor
+  html2style extract https://example.com evidence.json --profile full
+  html2style extract https://example.com evidence.json --headed --login-wait 60
+  html2style icons --from-evidence evidence.json --out icons
+  html2style profile evidence.json style-profile.json --markdown STYLE-measurements.md
+  html2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html
+  html2style assets replica.html --base-url https://example.com
+  html2style audit original.json replica.json --mode complete
 `);
 }

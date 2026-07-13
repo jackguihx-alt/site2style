@@ -10,7 +10,7 @@ This fictional example demonstrates the final public output shape without redist
 Regenerate the visual board from the repository root:
 
 ```bash
-node bin/site2style.mjs preview \
+node bin/html2style.mjs preview \
   examples/product-editorial/design-package/STYLE.md \
   examples/product-editorial/design-package/style-board.html
 ```
