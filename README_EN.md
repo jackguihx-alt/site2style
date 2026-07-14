@@ -266,15 +266,6 @@ HTML2Style does not import pages into Figma or claim ownership of captured third
 
 Complex Canvas / WebGL content, closed shadow roots, anti-bot challenges, video timelines, and every possible interaction state cannot currently be captured completely. These conditions are reported as evidence gaps instead of being guessed by an Agent.
 
-## Related projects
-
-- [Website to Design](https://websitetodesign.com/): imports websites as editable Figma designs.
-- [DesignDNA](https://www.designdna.site/): exports design-system files through a browser extension.
-- [Dembrandt](https://github.com/thevangelist/dembrandt): extracts design tokens and brand signals through CLI and MCP.
-- [brandmd](https://github.com/yuvrajangadsingh/brandmd): extracts multi-page design systems into Agent-readable formats.
-
-HTML2Style focuses on responsive browser evidence, design-transfer boundaries, cross-session handoff, and completeness verification.
-
 ## Development
 
 ```bash

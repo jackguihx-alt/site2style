@@ -266,15 +266,6 @@ HTML2Style 不会把网页导入 Figma，也不会声称拥有采集到的第三
 
 复杂 Canvas / WebGL、closed shadow root、反爬挑战、视频时间线和所有交互状态目前无法保证完整采集。这些情况会被记录为证据缺口，而不是由 Agent 猜测。
 
-## 相关项目
-
-- [Website to Design](https://websitetodesign.com/)：将网站导入为可编辑 Figma 设计。
-- [DesignDNA](https://www.designdna.site/)：通过浏览器扩展导出设计系统文件。
-- [Dembrandt](https://github.com/thevangelist/dembrandt)：通过 CLI 和 MCP 提取设计 Token 与品牌信号。
-- [brandmd](https://github.com/yuvrajangadsingh/brandmd)：将多页面设计系统提取为 Agent 可读格式。
-
-HTML2Style 更关注响应式浏览器证据、设计迁移边界、跨 session 交接和完整性验证。
-
 ## 开发
 
 ```bash
