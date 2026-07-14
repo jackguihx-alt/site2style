@@ -1,7 +1,5 @@
 # HTML2Style
 
-[Project page (中文 / English)](docs/index.html) · [Open the output example](examples/product-editorial/design-package/START-HERE.html)
-
 **One site in. A reusable design evidence package out.**
 
 `html2style` captures rendered pages across responsive conditions, measures their visual system, and turns the evidence into files that another Agent can inspect, apply, and verify. It is designed for style extraction first, with optional full design-system documentation and reconstruction auditing.
