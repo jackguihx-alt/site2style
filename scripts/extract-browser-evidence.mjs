@@ -1108,7 +1108,7 @@ async function extractWithChrome(urlToRead, chromePath, headed = false) {
       pages: {},
       interactions: {},
       tooling: {
-        selectedTool: "chrome-cli",
+        selectedTool: "chrome-cdp",
         browserPath: chromePath,
       },
     };
@@ -1338,7 +1338,7 @@ async function main() {
         case "playwright":
           results = await extractWithPlaywright(url, tooling, headed);
           break;
-        case "chrome-cli":
+        case "chrome-cdp":
           results = await extractWithChrome(url, candidate.path, headed);
           break;
         case "agent-browser":

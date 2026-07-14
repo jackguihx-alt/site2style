@@ -151,6 +151,38 @@ That is why `AGENT-HANDOFF.md` exists: the new Agent needs neither the original 
 - **Explicit transfer boundaries:** design principles can move; source logos, copy, photography, and identity do not transfer automatically.
 - **Verifiable results:** asset checks, page audits, and screenshot comparisons expose missing media, layout errors, and incomplete sections.
 
+## How it controls the browser
+
+HTML2Style does not bundle another vendor's browser CLI, and MCP is not required for capture. Four separate parts are involved:
+
+| Part | What it is | Required |
+| --- | --- | --- |
+| HTML2Style Skill | The web-style extraction method in `SKILL.md` | Yes |
+| HTML2Style CLI | The execution entry point written in this repository | Yes |
+| Browser backend | Playwright or local Chrome / Chromium / Edge | At least one |
+| MCP | Lets compatible Agents call the CLI as structured tools | No |
+
+The default call path is:
+
+```text
+Agent
+  ↓ reads SKILL.md
+HTML2Style CLI (this project's code)
+  ├─ Playwright API (optional open-source dependency)
+  ├─ Chrome CDP (direct connection to local Chrome, no third-party CLI)
+  └─ agent-browser (detected only when already installed, for legacy compatibility)
+```
+
+When Chrome, Chromium, or Edge is already installed, HTML2Style starts an isolated browser with a temporary user directory and connects through Chromium's official Chrome DevTools Protocol (CDP). It closes the process and deletes the temporary directory after capture. It does not control the user's everyday Chrome or read that browser's cookies, history, or login state.
+
+This direct connection is named `chrome-cdp` in code and evidence output. The CLI keeps the shorter `--backend chrome` option:
+
+```bash
+html2style extract https://example.com evidence.json --backend chrome
+```
+
+With MCP, the call path only gains an adapter: `Agent → MCP → HTML2Style CLI → browser`. MCP does not install or control the browser.
+
 ## Works across Agents
 
 | Interface | Intended users |

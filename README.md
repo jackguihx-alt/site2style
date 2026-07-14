@@ -151,6 +151,38 @@ node bin/html2style.mjs bundle design-package \
 - **明确迁移边界：** 设计原则可以迁移，原站 Logo、文案、图片和品牌身份不能自动继承。
 - **结果可以验证：** 资源检查、页面审计和截图对比可以发现缺图、错位和未完成区域。
 
+## 它如何控制浏览器
+
+HTML2Style 不会捆绑某个厂商的浏览器 CLI，也不需要 MCP 才能采集网页。这里有四个不同角色：
+
+| 部分 | 是什么 | 是否必需 |
+| --- | --- | --- |
+| HTML2Style Skill | `SKILL.md` 中的网页风格提取方法 | 是 |
+| HTML2Style CLI | 本项目自己编写的执行入口 | 是 |
+| 浏览器后端 | Playwright，或本机 Chrome / Chromium / Edge | 至少一个 |
+| MCP | 让兼容 MCP 的 Agent 以结构化工具调用 CLI | 否 |
+
+默认调用关系是：
+
+```text
+Agent
+  ↓ 阅读 SKILL.md
+HTML2Style CLI（本项目代码）
+  ├─ Playwright API（可选开源依赖）
+  ├─ Chrome CDP（直接连接本机 Chrome，不经过第三方 CLI）
+  └─ agent-browser（仅检测已安装版本，作为旧环境兼容后端）
+```
+
+本机已有 Chrome、Chromium 或 Edge 时，HTML2Style 会启动一个使用临时用户目录的隔离浏览器，通过 Chromium 官方的 Chrome DevTools Protocol（CDP）连接。采集结束后会关闭浏览器并删除临时目录，不会控制日常使用中的 Chrome，也不会读取原浏览器的 Cookie、历史记录或登录状态。
+
+代码和输出中将这条直接连接路径命名为 `chrome-cdp`。CLI 参数仍使用更简短的 `--backend chrome`：
+
+```bash
+html2style extract https://example.com evidence.json --backend chrome
+```
+
+如果使用 MCP，调用关系只是多一层适配：`Agent → MCP → HTML2Style CLI → 浏览器`。MCP 不负责安装或控制浏览器。
+
 ## 兼容不同 Agent
 
 | 接入方式 | 适合谁 |

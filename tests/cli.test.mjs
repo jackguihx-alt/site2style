@@ -3,6 +3,7 @@ import path from "node:path";
 import test from "node:test";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { backendCandidates } from "../lib/browser-tooling.mjs";
 import { VIEWPORT_PROFILES } from "../lib/viewports.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -44,4 +45,22 @@ test("browser doctor emits machine-readable output", () => {
   const output = JSON.parse(result.stdout);
   assert.equal(typeof output.ready, "boolean");
   assert.equal(typeof output.platform, "string");
+});
+
+test("system Chrome is identified as a direct CDP backend", () => {
+  const tooling = {
+    playwright: null,
+    chromePath: "/example/chrome",
+    agentBrowserPath: null,
+  };
+
+  assert.deepEqual(backendCandidates(tooling), [
+    { backend: "chrome-cdp", path: "/example/chrome" },
+  ]);
+  assert.deepEqual(backendCandidates(tooling, "chrome"), [
+    { backend: "chrome-cdp", path: "/example/chrome" },
+  ]);
+  assert.deepEqual(backendCandidates(tooling, "chrome-cli"), [
+    { backend: "chrome-cdp", path: "/example/chrome" },
+  ]);
 });

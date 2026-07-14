@@ -8,7 +8,7 @@ The project has no required Agent vendor or private browser plugin.
 
 1. The CLI and MCP server call the same extraction script.
 2. The extraction script tries Playwright first.
-3. If Playwright cannot launch, it falls back to a system Chrome, Chromium, or Edge browser through the Chrome DevTools Protocol.
+3. If Playwright cannot launch, it falls back to the built-in `chrome-cdp` backend, which connects directly to a system Chrome, Chromium, or Edge browser through the Chrome DevTools Protocol. `chrome-cdp` is project code, not an external CLI.
 4. `agent-browser` remains a legacy final fallback.
 
 The browser executable is an external runtime dependency. It is intentionally not committed to the repository or bundled in release archives.
