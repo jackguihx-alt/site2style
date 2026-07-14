@@ -2,211 +2,178 @@
 
 # HTML2Style
 
-**One site in. A reusable design evidence package out.**
+**Give it a website. Get a reusable web style.**
 
-`html2style` captures rendered pages across responsive conditions, measures their visual system, and turns the evidence into files that another Agent can inspect, apply, and verify. It is designed for style extraction first, with optional full design-system documentation and reconstruction auditing.
-
-Despite the name, the input can be a live URL, a local HTML file, or a manually authenticated browser session. “HTML” means the rendered web interface, not static source alone.
+Provide a website URL and HTML2Style automatically analyzes its colors, typography, spacing, layout, imagery, icons, and responsive behavior. It generates a style package that you can inspect, give to an Agent, or apply to a new webpage.
 
 ```text
-URL -> browser evidence -> STYLE.md + profile + board -> design-package/
-                                                      \-> reuse in any later Agent session
+Website URL  →  HTML2Style  →  Web style package
+                                 ├─ STYLE.md: style rules
+                                 ├─ style-board.html: visual style board
+                                 └─ design-package/: reusable folder
 ```
 
-## The problem
+## Understand it in 30 seconds
 
-“Make it look like this website” is underspecified.
+HTML2Style helps you do three things:
 
-- Screenshots show pixels, but hide typography rules, responsive sources, crop behavior, and interaction states.
-- DOM scrapers miss computed styles, JavaScript-rendered content, SVG systems, and viewport-height media queries.
-- A prompt such as “Apple style” often collapses into superficial whitespace, black text, and blue buttons.
-- Agent-specific browser tools make a workflow difficult to reuse in another editor or model.
-- A convincing desktop screenshot can still hide broken mobile layouts, missing sections, wrong assets, and incorrect icon geometry.
+1. **Extract a web style:** collect colors, type, spacing, radius, layout, imagery, and responsive patterns.
+2. **Understand a web style:** open a generated HTML style board instead of searching through source code.
+3. **Reuse a web style:** give the generated folder to any Agent and use it to design a new page.
 
-This project captures the evidence and makes the design reasoning portable.
+It does more than capture a screenshot or list a few color values. It extracts a fuller set of style rules that can be reused later.
 
-## The story: from imitation to a portable design language
+## Simplest use: give it to an Agent
 
-This project started with a deceptively simple request: reproduce a polished product website as accurately as possible.
+### 1. Open the project
 
-The first result looked plausible from a distance. It had similar colors, large headings, generous whitespace, and rounded actions. But closer inspection exposed the real failures: icons were missing, image crops were wrong, repeated cards had inconsistent geometry, mobile artwork used the wrong source, and the page stopped before the original experience was complete.
+```bash
+git clone https://github.com/jackguihx-alt/html2style.git
+cd html2style
+npm install
+```
 
-More prompting did not solve the underlying problem. The Agent had pixels and impressions, but not the system behind them.
+### 2. Tell your Agent
 
-That failure produced a different workflow:
+```text
+Read SKILL.md in this repository and extract the web style of https://example.com.
+Generate the complete design-package/ in English. Do not reconstruct the website.
+```
 
-1. **Observe:** render the live page across width and height conditions.
-2. **Measure:** capture computed type, color, spacing, geometry, assets, icons, structure, and interaction evidence.
-3. **Distill:** separate deterministic measurements from Agent-authored design rules.
-4. **Transfer:** preserve hierarchy, rhythm, density, imagery, and responsive logic while replacing source identity and protected assets.
-5. **Package:** create one portable folder that another Agent can reuse without the original conversation.
+For design-language transfer:
 
-The important test was no longer “Can an Agent copy this page?” It became:
+```text
+Read SKILL.md and extract the web style of https://example.com.
+Use that style to design a new page for my product without copying the source brand, copy, or images.
+```
 
-> Can an Agent explain why the design works, carry those principles into a different product, and prove which parts were measured rather than guessed?
+Codex, Claude Code, Cursor, Copilot, or any other shell-capable Agent can run the workflow. The runtime uses Playwright or a local Chrome / Chromium / Edge installation and does not require a vendor-specific Agent browser.
 
-`html2style` is the open-source answer to that question. It does not treat a screenshot as a design system or a brand as a style preset. It turns browser evidence into rules, transfer boundaries, and a reusable handoff.
+## What you receive
 
-## What it produces
-
-The primary result is one portable folder:
+The final result is one folder that should be kept and moved as a unit:
 
 ```text
 design-package/
-├── START-HERE.md       # human entry point
-├── START-HERE.html     # double-click entry point
-├── AGENT-HANDOFF.md    # new-session Agent entry point
-├── manifest.json       # machine entry point
-├── STYLE.md
-├── style-board.html
-├── style-profile.json
-├── advanced/           # optional DESIGN.md, board, icons
-└── evidence/           # optional raw evidence and screenshots
+├── START-HERE.html     # human entry point: double-click
+├── START-HERE.md       # GitHub / Markdown entry point
+├── AGENT-HANDOFF.md    # new Agent session entry point
+├── manifest.json       # automation entry point
+├── STYLE.md            # transferable design rules
+├── style-profile.json  # deterministic measurements
+├── style-board.html    # visual style board
+├── advanced/           # optional full system and icon library
+└── evidence/           # optional browser evidence and screenshots
 ```
 
-| Output | Purpose |
+Each role opens one clear entry point:
+
+| User | Open |
 | --- | --- |
-| `START-HERE.html` / `START-HERE.md` | Double-click and GitHub-friendly instructions for every role |
-| `AGENT-HANDOFF.md` | Makes the result reusable across sessions without chat history |
-| `manifest.json` | Stable package ID, relative entry points, file roles, and evidence gaps |
-| `evidence.json` + screenshots | Rendered DOM, computed styles, responsive assets, image geometry, SVGs, structure, and interaction evidence |
-| `style-profile.json` | Deterministic visual signals that tools can consume without interpreting prose |
-| `STYLE.md` | Transferable hierarchy, rhythm, density, color, shape, image, motion, and responsive rules |
-| `style-board.html` | A visual review surface for the style package |
-| `DESIGN.md` + `design-system.html` | Detailed tokens, components, page patterns, icon system, and reconstruction guidance |
-| Icon library | Searchable HTML, JSON metadata, and standalone SVG files |
-| Audit reports | Asset health, structure, responsive parity, and screenshot comparison |
+| Product, design, or review | `START-HERE.html` |
+| A fresh Agent session | `AGENT-HANDOFF.md` |
+| Developer | `STYLE.md` |
+| Automation | `manifest.json` |
 
-See the copyright-safe [product editorial example](examples/product-editorial/README.md).
+This is an example of the generated `style-board.html`. It presents both the rules and their supporting evidence instead of only showing a reference screenshot.
 
-## Five-minute start
+<p align="center">
+  <img src="docs/assets/style-board.png" alt="Visual style board generated by HTML2Style" width="920">
+</p>
+
+Browse the [complete example package](examples/product-editorial/design-package/). After cloning the repository, double-click its local `START-HERE.html`; the example uses fictional content and does not redistribute a real site's brand or assets.
+
+## Three common workflows
+
+### 1. Extract a website style
+
+Useful for competitive research, design review, and design-system discovery. The output describes color, type, hierarchy, density, shape, imagery, motion, and responsive rules with evidence and confidence.
+
+### 2. Transfer a style to a new product
+
+Useful for requests such as “design an Apple-inspired page for my product.” HTML2Style preserves measured hierarchy, rhythm, and layout logic while requiring the source brand, content, information architecture, and protected assets to be replaced.
+
+### 3. Verify a reconstruction
+
+Useful for authorized rebuilds, migrations, and visual regression. It checks page completeness, image source and crop behavior, missing icons, repeated component geometry, and desktop/mobile parity.
+
+## Run the CLI yourself
 
 Requirements: Node.js 20+ and Chrome, Chromium, Edge, or Playwright Chromium.
 
-```bash
-npm install
-npm run doctor
+### 1. Check the browser
 
+```bash
+npm run doctor
+```
+
+### 2. Capture and measure
+
+```bash
 node bin/html2style.mjs extract https://example.com evidence.json --profile full
-node bin/html2style.mjs profile evidence.json style-profile.json --markdown STYLE-measurements.md
+node bin/html2style.mjs profile evidence.json style-profile.json \
+  --markdown STYLE-measurements.md
 cp assets/STYLE.template.md STYLE.md
 ```
 
-Ask your Agent to read `SKILL.md`, `STYLE-measurements.md`, and `assets/STYLE.template.md`, then synthesize `STYLE.md`. Every important design rule should cite its measured support and confidence. Render the result:
+Ask an Agent to complete `STYLE.md` from `STYLE-measurements.md` and `assets/STYLE.template.md`. Deterministic measurements remain separate from Agent-authored design interpretation.
+
+### 3. Render and bundle
 
 ```bash
 node bin/html2style.mjs preview STYLE.md style-board.html
+
 node bin/html2style.mjs bundle design-package \
   --style STYLE.md \
   --profile style-profile.json \
   --board style-board.html \
-  --locale en \
   --measurements STYLE-measurements.md \
-  --evidence evidence.json
+  --evidence evidence.json \
+  --locale en
 ```
 
-`STYLE-measurements.md` is deterministic evidence; `STYLE.md` is the Agent-authored interpretation.
+## Reuse across sessions
 
-To reuse the result in another project or Session, move the whole `design-package/` folder and say:
+Move the whole `design-package/` folder into a new project and tell the new Agent:
 
 ```text
 Read design-package/AGENT-HANDOFF.md and apply this design language to my new task.
 Do not re-extract the reference unless the package reports missing evidence.
 ```
 
-If no browser is detected:
+That is why `AGENT-HANDOFF.md` exists: the new Agent needs neither the original conversation nor another visit to the reference site.
 
-```bash
-npx playwright install chromium
-```
+## Why it is more reliable than screenshots alone
 
-For a login-gated page, use a visible temporary browser profile and sign in manually:
-
-```bash
-node bin/html2style.mjs extract https://example.com evidence.json --headed --login-wait 60
-```
-
-The project does not request or store credentials.
-
-## Three workflows
-
-### 1. Extract a transferable style
-
-Use this when the goal is to understand a reference or apply its design logic to a different product.
-
-1. Capture the `full` responsive profile.
-2. Generate `style-profile.json` and `STYLE-measurements.md`.
-3. Synthesize `STYLE.md` with observation, measurement, rule, and confidence separated.
-4. Mark source material as `retain`, `reinterpret`, or `replace`.
-5. Render and review `style-board.html`.
-6. Bundle the outputs into `design-package/` and deliver that folder as the single result.
-
-The result describes how the design works without treating source branding, copy, icons, or photography as reusable style.
-
-### 2. Document a complete design system
-
-Use `assets/DESIGN.template.md` to create `DESIGN.md`, then render it:
-
-```bash
-node bin/html2style.mjs icons --from-evidence evidence.json --out icons
-node bin/html2style.mjs preview DESIGN.md design-system.html
-```
-
-This mode adds component states, page patterns, icon evidence, content voice, and implementation anchors.
-
-### 3. Verify a reconstruction
-
-Use this only when replication is permitted and intended:
-
-```bash
-node bin/html2style.mjs assets replica.html --base-url https://example.com
-node bin/html2style.mjs extract ./replica.html replica-evidence.json --profile full
-node bin/html2style.mjs audit evidence.json replica-evidence.json --mode complete
-node bin/html2style.mjs compare original.png replica.png comparison.html
-```
-
-The complete audit checks viewport coverage, document height, structural counts, gallery order, footer groups, placeholders, broken media, responsive source mappings, and separate owner/rendered/intrinsic image geometry.
-
-## Responsive evidence
-
-The default `full` profile captures width and height variants because responsive artwork may depend on both:
-
-| Name | Viewport | Typical source |
-| --- | ---: | --- |
-| desktop | 1440×900 | large/tall |
-| desktop-short | 1440×720 | large/short |
-| tablet | 1024×768 | medium/tall |
-| tablet-short | 1024×700 | medium/short |
-| mobile | 390×844 | small/mobile |
-
-Use `--profile standard` for three viewports or `--profile minimal` for desktop and mobile. Record skipped conditions as evidence gaps.
+- **Real browser evidence:** captures DOM, computed styles, CSS variables, SVGs, network resources, and selected responsive images.
+- **Multiple viewports:** checks desktop tall/short, tablet tall/short, and mobile instead of one desktop hero screenshot.
+- **Measurement stays separate:** `style-profile.json` stores deterministic data; `STYLE.md` stores readable design rules.
+- **Explicit transfer boundaries:** design principles can move; source logos, copy, photography, and identity do not transfer automatically.
+- **Verifiable results:** asset checks, page audits, and screenshot comparisons expose missing media, layout errors, and incomplete sections.
 
 ## Works across Agents
 
-There is no universal Skill discovery format, so the same workflow is exposed through independent layers:
-
-| Interface | Who can use it |
+| Interface | Intended users |
 | --- | --- |
-| CLI | Any Agent or human with shell access |
+| CLI | Any user or Agent with shell access |
 | MCP stdio server | Any MCP-compatible client |
 | `SKILL.md` | Skill-aware Agents |
-| `AGENTS.md` | Coding Agents that read repository instructions |
+| `AGENTS.md` | Codex and other repository-aware Agents |
 | `CLAUDE.md` | Claude Code |
 | `.cursor/rules` | Cursor |
 | Copilot instructions | GitHub Copilot |
 | Portable prompt | Other Agents that accept project instructions |
 
-The runtime automatically tries Playwright, a locally installed Chrome/Chromium/Edge browser, and then the legacy `agent-browser` CLI. No Codex, Claude, Cursor, or other vendor browser capability is required.
+### Chinese and English
 
-### Language and international use
-
-- The Skill follows the user's conversation language for human-facing deliverables.
-- `html2style bundle` defaults to `zh-CN`; international users can pass `--locale en`.
+- Chinese users receive `zh-CN` human-facing files by default.
+- English users pass `--locale en`.
 - `START-HERE.md`, `START-HERE.html`, and `AGENT-HANDOFF.md` are localized.
-- CLI commands, MCP tool names, filenames, and JSON fields remain English for stable automation across regions.
-- Source-site content and measured evidence remain in their original language unless the user explicitly requests translation.
+- Commands, filenames, MCP tool names, and JSON fields remain English for stable automation and international collaboration.
+- Source-site content and measured evidence remain in the original language unless translation is explicitly requested.
 
-## MCP setup
+<details>
+<summary><strong>MCP setup</strong></summary>
 
 ```bash
 npm run mcp
@@ -223,43 +190,58 @@ npm run mcp
 }
 ```
 
-Tools: `browser_doctor`, `extract_website_evidence`, `extract_style_profile`, `bundle_design_package`, `extract_icon_library`, `render_design_preview`, `render_visual_comparison`, `validate_asset_urls`, and `audit_reconstruction`.
+See [`integrations/mcp.example.json`](integrations/mcp.example.json).
 
-See [the example MCP configuration](integrations/mcp.example.json) and [portable Agent prompt](integrations/portable-agent-prompt.md).
+</details>
 
-## Why this is different
+<details>
+<summary><strong>Login-gated pages and browser installation</strong></summary>
 
-- **Evidence before interpretation:** measured profiles remain separate from Agent-authored design rules.
-- **Responsive by default:** width, height, `<picture>` mappings, selected sources, and rendered geometry are captured explicitly.
-- **Transfer boundaries:** the style workflow distinguishes reusable principles from protected source identity and assets.
-- **Human and machine outputs:** JSON supports automation; Markdown supports Agents; HTML supports visual review.
-- **Verification is part of the workflow:** asset checks and reconstruction audits prevent a polished first viewport from masking incomplete work.
-- **Portable runtime:** CLI and MCP are the product interfaces; vendor adapters are optional discovery aids.
+If no browser is detected:
 
-## Related work and scope
+```bash
+npx playwright install chromium
+```
 
-Website design extraction is an active category. These adjacent projects are useful references for choosing the right tool:
+For a login-gated page, open a temporary visible browser and sign in manually:
 
-- [Website to Design](https://websitetodesign.com/) imports websites as editable Figma designs.
-- [DesignDNA](https://www.designdna.site/) is a browser extension that exports design-system files for coding tools.
-- [Dembrandt](https://github.com/thevangelist/dembrandt) extracts design tokens, brand signals, and `DESIGN.md` through a CLI and MCP server.
-- [brandmd](https://github.com/yuvrajangadsingh/brandmd) extracts a multi-page design system into agent-readable formats.
+```bash
+node bin/html2style.mjs extract https://example.com evidence.json \
+  --headed --login-wait 60
+```
 
-HTML2Style focuses on a different handoff problem: preserving responsive browser evidence, separating measurements from interpretation, marking what may or may not be transferred, auditing reconstruction completeness, and delivering the result as one cross-session package. It does not import a page into Figma, claim ownership of captured material, or treat third-party brand assets as reusable output.
+HTML2Style does not request or store credentials.
 
-## Responsible use
+</details>
 
-The MIT license applies to this project's code and templates, not to content captured from third-party websites.
+<details>
+<summary><strong>Reconstruction audit commands</strong></summary>
 
-- Review website terms, copyright, trademark, robots policy, and applicable law.
-- Do not publish captured credentials, personal data, private page text, or session material.
-- Do not redistribute source photography, fonts, logos, icons, copy, or distinctive campaign assets without permission.
-- Prefer owned, licensed, or newly created assets for design-language transfer.
-- Treat evidence from login-gated pages as sensitive unless the owner has approved publication.
+Use only when you have permission to reconstruct the target website:
 
-## Project status
+```bash
+node bin/html2style.mjs assets replica.html --base-url https://example.com
+node bin/html2style.mjs extract ./replica.html replica-evidence.json --profile full
+node bin/html2style.mjs audit evidence.json replica-evidence.json --mode complete
+node bin/html2style.mjs compare original.png replica.png comparison.html
+```
 
-Version `0.5.0` is an early public release. Static and JavaScript-rendered sites are supported. Authentication can be handled through manual login. Complex canvas/WebGL content, closed shadow roots, anti-bot challenges, video timelines, and every possible interaction state are not fully captured; report those as evidence gaps rather than inferring them.
+</details>
+
+## Project boundaries
+
+HTML2Style does not import pages into Figma or claim ownership of captured third-party material. The MIT License covers this project's code and templates, not source photography, fonts, logos, icons, copy, or brand assets.
+
+Complex Canvas / WebGL content, closed shadow roots, anti-bot challenges, video timelines, and every possible interaction state cannot currently be captured completely. These conditions are reported as evidence gaps instead of being guessed by an Agent.
+
+## Related projects
+
+- [Website to Design](https://websitetodesign.com/): imports websites as editable Figma designs.
+- [DesignDNA](https://www.designdna.site/): exports design-system files through a browser extension.
+- [Dembrandt](https://github.com/thevangelist/dembrandt): extracts design tokens and brand signals through CLI and MCP.
+- [brandmd](https://github.com/yuvrajangadsingh/brandmd): extracts multi-page design systems into Agent-readable formats.
+
+HTML2Style focuses on responsive browser evidence, design-transfer boundaries, cross-session handoff, and completeness verification.
 
 ## Development
 
@@ -268,7 +250,7 @@ npm test
 npm run validate
 ```
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. Report security issues according to [SECURITY.md](SECURITY.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing. Report security issues according to [SECURITY.md](SECURITY.md).
 
 ## License
 
