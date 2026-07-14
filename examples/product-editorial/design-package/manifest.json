@@ -3,7 +3,8 @@
   "packageType": "website-design-language",
   "packageId": "design-language-0dd741359bac",
   "name": "Product Editorial Example",
-  "createdAt": "2026-07-13T03:44:42.813Z",
+  "locale": "zh-CN",
+  "createdAt": "2026-07-14T03:01:42.739Z",
   "source": {
     "url": "https://example.com/fictional-product",
     "capturedAt": null,
@@ -17,8 +18,8 @@
     "machine": "style-profile.json"
   },
   "reuse": {
-    "instruction": "Ask any Agent to read AGENT-HANDOFF.md before creating or reviewing a design.",
-    "reExtractWhen": "The reference site changed or the evidence gaps block the new task."
+    "instruction": "在创建或评审设计前，让 Agent 先阅读 AGENT-HANDOFF.md。",
+    "reExtractWhen": "参考网站发生变化，或证据缺口阻碍新任务时。"
   },
   "evidenceGaps": [
     "No interaction-state evidence was captured."

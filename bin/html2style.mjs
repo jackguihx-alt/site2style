@@ -51,7 +51,7 @@ Commands:
   preview <DESIGN.md> <html>      Render the human-readable design-system page
   compare <a.png> <b.png> <html> Build a visual comparison page
   profile <evidence> [output]      Build a measured transferable style profile
-  bundle <dir> --style <file>      Create a portable cross-session design package
+  bundle <dir> --style <file>      Create a localized cross-session design package
   assets <html-or-evidence>       Validate every referenced asset URL
   audit <original> <replica>      Audit complete or representative fidelity
   mcp                             Start the stdio MCP server
@@ -62,7 +62,7 @@ Examples:
   html2style extract https://example.com evidence.json --headed --login-wait 60
   html2style icons --from-evidence evidence.json --out icons
   html2style profile evidence.json style-profile.json --markdown STYLE-measurements.md
-  html2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html
+  html2style bundle design-package --style STYLE.md --profile style-profile.json --board style-board.html --locale zh-CN
   html2style assets replica.html --base-url https://example.com
   html2style audit original.json replica.json --mode complete
 `);

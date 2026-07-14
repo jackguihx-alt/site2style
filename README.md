@@ -1,85 +1,87 @@
+<p align="right">中文 | <a href="README_EN.md">English</a></p>
+
 # HTML2Style
 
-**One site in. A reusable design evidence package out.**
+**输入一个网站，输出一套可复用的设计证据包。**
 
-`html2style` captures rendered pages across responsive conditions, measures their visual system, and turns the evidence into files that another Agent can inspect, apply, and verify. It is designed for style extraction first, with optional full design-system documentation and reconstruction auditing.
+`html2style` 会在不同响应式条件下采集网页的真实渲染结果，测量它的视觉系统，并把证据整理成其他 Agent 可以读取、应用和验证的文件。它首先解决风格提取与迁移，也可以进一步生成完整的设计系统文档并审计网页复刻质量。
 
-Despite the name, the input can be a live URL, a local HTML file, or a manually authenticated browser session. “HTML” means the rendered web interface, not static source alone.
+名字虽然叫 HTML2Style，但输入不只限于静态 HTML：你可以提供线上 URL、本地 HTML 文件，或在可见浏览器中手动登录后的页面。这里的“HTML”代表浏览器最终渲染出来的界面，而不只是源代码。
 
 ```text
-URL -> browser evidence -> STYLE.md + profile + board -> design-package/
-                                                      \-> reuse in any later Agent session
+URL -> 浏览器证据 -> STYLE.md + profile + board -> design-package/
+                                                    \-> 在之后任意 Agent session 中复用
 ```
 
-## The problem
+## 为什么需要它
 
-“Make it look like this website” is underspecified.
+“做得像这个网站”并不是一个足够明确的需求。
 
-- Screenshots show pixels, but hide typography rules, responsive sources, crop behavior, and interaction states.
-- DOM scrapers miss computed styles, JavaScript-rendered content, SVG systems, and viewport-height media queries.
-- A prompt such as “Apple style” often collapses into superficial whitespace, black text, and blue buttons.
-- Agent-specific browser tools make a workflow difficult to reuse in another editor or model.
-- A convincing desktop screenshot can still hide broken mobile layouts, missing sections, wrong assets, and incorrect icon geometry.
+- 截图只展示像素，看不到字体规则、响应式资源、图片裁切方式和交互状态。
+- 普通 DOM 抓取会遗漏计算样式、JavaScript 渲染内容、SVG 系统和视口高度媒体查询。
+- “Apple 风格”这类提示词很容易退化成留白、黑字和蓝色按钮，无法保留真正的设计逻辑。
+- 绑定某个 Agent 的浏览器能力，很难在其他编辑器、模型或 session 中复用。
+- 一张看起来不错的桌面截图，仍可能掩盖移动端错位、页面缺失、图片错误和图标尺寸不一致。
 
-This project captures the evidence and makes the design reasoning portable.
+HTML2Style 采集这些证据，并把设计判断变成可以跨 Agent 交接的文件。
 
-## The story: from imitation to a portable design language
+## 项目故事：从复刻网页到迁移设计语言
 
-This project started with a deceptively simple request: reproduce a polished product website as accurately as possible.
+这个项目起源于一个看似简单的任务：尽可能准确地复刻一个成熟的产品网站。
 
-The first result looked plausible from a distance. It had similar colors, large headings, generous whitespace, and rounded actions. But closer inspection exposed the real failures: icons were missing, image crops were wrong, repeated cards had inconsistent geometry, mobile artwork used the wrong source, and the page stopped before the original experience was complete.
+第一版远看似乎没问题：颜色接近、标题很大、留白充足、按钮也有圆角。但仔细对照后，真正的问题全部暴露出来了：图标缺失、图片裁切错误、重复卡片尺寸不一致、移动端使用了错误素材，而且页面并没有完整复刻。
 
-More prompting did not solve the underlying problem. The Agent had pixels and impressions, but not the system behind them.
+继续追加提示词没有解决根本问题。Agent 看到了像素和印象，却没有拿到这些设计背后的系统。
 
-That failure produced a different workflow:
+因此，我们重新设计了整个流程：
 
-1. **Observe:** render the live page across width and height conditions.
-2. **Measure:** capture computed type, color, spacing, geometry, assets, icons, structure, and interaction evidence.
-3. **Distill:** separate deterministic measurements from Agent-authored design rules.
-4. **Transfer:** preserve hierarchy, rhythm, density, imagery, and responsive logic while replacing source identity and protected assets.
-5. **Package:** create one portable folder that another Agent can reuse without the original conversation.
+1. **观察：** 在不同宽度和高度条件下渲染真实页面。
+2. **测量：** 采集字体、颜色、间距、几何、资源、图标、结构与交互证据。
+3. **提炼：** 将确定性测量与 Agent 总结的设计规则分开保存。
+4. **迁移：** 保留层级、节奏、密度、图片策略和响应式逻辑，同时替换原站身份与受保护素材。
+5. **打包：** 生成一个完整文件夹，让另一个 Agent 无需读取旧聊天记录即可复用。
 
-The important test was no longer “Can an Agent copy this page?” It became:
+最终的判断标准不再是“Agent 能否抄出这个页面”，而是：
 
-> Can an Agent explain why the design works, carry those principles into a different product, and prove which parts were measured rather than guessed?
+> Agent 能否解释这个设计为什么成立，把设计原则迁移到另一个产品，并说明哪些结论来自测量、哪些只是推断？
 
-`html2style` is the open-source answer to that question. It does not treat a screenshot as a design system or a brand as a style preset. It turns browser evidence into rules, transfer boundaries, and a reusable handoff.
+`html2style` 是我们对这个问题的开源回答。它不会把一张截图当作设计系统，也不会把某个品牌直接当作风格预设；它把浏览器证据转化为设计规则、迁移边界和可复用的交接包。
 
-## What it produces
+## 会生成什么
 
-The primary result is one portable folder:
+主要产物是一个可整体移动的文件夹：
 
 ```text
 design-package/
-├── START-HERE.md       # human entry point
-├── START-HERE.html     # double-click entry point
-├── AGENT-HANDOFF.md    # new-session Agent entry point
-├── manifest.json       # machine entry point
+├── START-HERE.md       # GitHub / 人类入口
+├── START-HERE.html     # 双击打开的可视化入口
+├── AGENT-HANDOFF.md    # 新 session 的 Agent 入口
+├── manifest.json       # 机器入口
 ├── STYLE.md
 ├── style-board.html
 ├── style-profile.json
-├── advanced/           # optional DESIGN.md, board, icons
-└── evidence/           # optional raw evidence and screenshots
+├── advanced/           # 可选：DESIGN.md、设计板、图标库
+└── evidence/           # 可选：原始证据与截图
 ```
 
-| Output | Purpose |
+| 产物 | 用途 |
 | --- | --- |
-| `START-HERE.html` / `START-HERE.md` | Double-click and GitHub-friendly instructions for every role |
-| `AGENT-HANDOFF.md` | Makes the result reusable across sessions without chat history |
-| `manifest.json` | Stable package ID, relative entry points, file roles, and evidence gaps |
-| `evidence.json` + screenshots | Rendered DOM, computed styles, responsive assets, image geometry, SVGs, structure, and interaction evidence |
-| `style-profile.json` | Deterministic visual signals that tools can consume without interpreting prose |
-| `STYLE.md` | Transferable hierarchy, rhythm, density, color, shape, image, motion, and responsive rules |
-| `style-board.html` | A visual review surface for the style package |
-| `DESIGN.md` + `design-system.html` | Detailed tokens, components, page patterns, icon system, and reconstruction guidance |
-| Icon library | Searchable HTML, JSON metadata, and standalone SVG files |
-| Audit reports | Asset health, structure, responsive parity, and screenshot comparison |
+| `START-HERE.html` / `START-HERE.md` | 告诉不同角色应该先打开什么、接下来做什么 |
+| `AGENT-HANDOFF.md` | 让新 session 无需旧聊天记录也能继续工作 |
+| `manifest.json` | 提供稳定 package ID、相对路径、文件角色和证据缺口 |
+| `evidence.json` + 截图 | 保存渲染 DOM、计算样式、响应式资源、图片几何、SVG、结构和交互证据 |
+| `style-profile.json` | 工具可直接读取、不依赖自然语言解释的确定性视觉信号 |
+| `STYLE.md` | 可迁移的层级、节奏、密度、颜色、形状、图片、动效和响应式规则 |
+| `style-board.html` | 供人类检查风格包的可视化页面 |
+| `DESIGN.md` + `design-system.html` | 更完整的 Token、组件、页面模式、图标系统和复刻指南 |
+| 图标库 | 可搜索 HTML、JSON 元数据和独立 SVG 文件 |
+| 审计报告 | 检查资源健康、页面结构、响应式一致性和截图差异 |
 
-See the copyright-safe [product editorial example](examples/product-editorial/README.md).
+仓库中提供了一个不包含第三方版权素材的[产品编辑风格示例](examples/product-editorial/README.md)。
 
-## Five-minute start
+## 五分钟上手
 
-Requirements: Node.js 20+ and Chrome, Chromium, Edge, or Playwright Chromium.
+环境要求：Node.js 20+，以及 Chrome、Chromium、Edge 或 Playwright Chromium。
 
 ```bash
 npm install
@@ -90,7 +92,7 @@ node bin/html2style.mjs profile evidence.json style-profile.json --markdown STYL
 cp assets/STYLE.template.md STYLE.md
 ```
 
-Ask your Agent to read `SKILL.md`, `STYLE-measurements.md`, and `assets/STYLE.template.md`, then synthesize `STYLE.md`. Every important design rule should cite its measured support and confidence. Render the result:
+让你的 Agent 阅读 `SKILL.md`、`STYLE-measurements.md` 和 `assets/STYLE.template.md`，然后生成 `STYLE.md`。每条重要设计规则都应该标注测量依据和置信度。接着渲染并打包：
 
 ```bash
 node bin/html2style.mjs preview STYLE.md style-board.html
@@ -98,62 +100,63 @@ node bin/html2style.mjs bundle design-package \
   --style STYLE.md \
   --profile style-profile.json \
   --board style-board.html \
+  --locale zh-CN \
   --measurements STYLE-measurements.md \
   --evidence evidence.json
 ```
 
-`STYLE-measurements.md` is deterministic evidence; `STYLE.md` is the Agent-authored interpretation.
+`STYLE-measurements.md` 是确定性证据，`STYLE.md` 是 Agent 基于证据做出的设计解释。
 
-To reuse the result in another project or Session, move the whole `design-package/` folder and say:
+需要在其他项目或 session 中复用时，移动整个 `design-package/` 文件夹，然后告诉 Agent：
 
 ```text
-Read design-package/AGENT-HANDOFF.md and apply this design language to my new task.
-Do not re-extract the reference unless the package reports missing evidence.
+阅读 design-package/AGENT-HANDOFF.md，并把这套设计语言应用到我的新任务。
+除非交接包明确提示证据缺失，否则不要重新采集参考网站。
 ```
 
-If no browser is detected:
+如果没有检测到浏览器：
 
 ```bash
 npx playwright install chromium
 ```
 
-For a login-gated page, use a visible temporary browser profile and sign in manually:
+如果页面需要登录，可以开启临时可见浏览器并手动登录：
 
 ```bash
 node bin/html2style.mjs extract https://example.com evidence.json --headed --login-wait 60
 ```
 
-The project does not request or store credentials.
+项目不会请求或保存账号密码。
 
-## Three workflows
+## 三种工作流
 
-### 1. Extract a transferable style
+### 1. 提取可迁移风格
 
-Use this when the goal is to understand a reference or apply its design logic to a different product.
+适用于理解参考网站，或把它的设计逻辑迁移到另一个产品。
 
-1. Capture the `full` responsive profile.
-2. Generate `style-profile.json` and `STYLE-measurements.md`.
-3. Synthesize `STYLE.md` with observation, measurement, rule, and confidence separated.
-4. Mark source material as `retain`, `reinterpret`, or `replace`.
-5. Render and review `style-board.html`.
-6. Bundle the outputs into `design-package/` and deliver that folder as the single result.
+1. 使用 `full` 响应式配置采集页面。
+2. 生成 `style-profile.json` 和 `STYLE-measurements.md`。
+3. 将观察、测量、规则与置信度分开，生成 `STYLE.md`。
+4. 把原站内容标记为 `retain`、`reinterpret` 或 `replace`。
+5. 渲染并检查 `style-board.html`。
+6. 将结果打包到 `design-package/`，并把整个文件夹作为唯一交付物。
 
-The result describes how the design works without treating source branding, copy, icons, or photography as reusable style.
+最终结果描述的是设计如何运作，而不是把原站品牌、文案、图标或摄影素材当成可以直接复用的风格。
 
-### 2. Document a complete design system
+### 2. 生成完整设计系统文档
 
-Use `assets/DESIGN.template.md` to create `DESIGN.md`, then render it:
+使用 `assets/DESIGN.template.md` 创建 `DESIGN.md`，然后渲染：
 
 ```bash
 node bin/html2style.mjs icons --from-evidence evidence.json --out icons
 node bin/html2style.mjs preview DESIGN.md design-system.html
 ```
 
-This mode adds component states, page patterns, icon evidence, content voice, and implementation anchors.
+这个模式会补充组件状态、页面模式、图标证据、内容语气和实现参考。
 
-### 3. Verify a reconstruction
+### 3. 验证网页复刻
 
-Use this only when replication is permitted and intended:
+仅在你有权复刻且任务确实要求复刻时使用：
 
 ```bash
 node bin/html2style.mjs assets replica.html --base-url https://example.com
@@ -162,40 +165,48 @@ node bin/html2style.mjs audit evidence.json replica-evidence.json --mode complet
 node bin/html2style.mjs compare original.png replica.png comparison.html
 ```
 
-The complete audit checks viewport coverage, document height, structural counts, gallery order, footer groups, placeholders, broken media, responsive source mappings, and separate owner/rendered/intrinsic image geometry.
+完整审计会检查视口覆盖、文档高度、结构数量、画廊顺序、页脚分组、占位内容、损坏媒体、响应式资源映射，以及图片容器、渲染尺寸和原始尺寸。
 
-## Responsive evidence
+## 响应式证据
 
-The default `full` profile captures width and height variants because responsive artwork may depend on both:
+默认 `full` 配置同时采集宽度和高度变化，因为响应式图片可能同时依赖这两个条件：
 
-| Name | Viewport | Typical source |
+| 名称 | 视口 | 常见资源条件 |
 | --- | ---: | --- |
-| desktop | 1440×900 | large/tall |
-| desktop-short | 1440×720 | large/short |
-| tablet | 1024×768 | medium/tall |
-| tablet-short | 1024×700 | medium/short |
-| mobile | 390×844 | small/mobile |
+| desktop | 1440×900 | 大屏 / 高视口 |
+| desktop-short | 1440×720 | 大屏 / 短视口 |
+| tablet | 1024×768 | 中屏 / 高视口 |
+| tablet-short | 1024×700 | 中屏 / 短视口 |
+| mobile | 390×844 | 小屏 / 移动端 |
 
-Use `--profile standard` for three viewports or `--profile minimal` for desktop and mobile. Record skipped conditions as evidence gaps.
+使用 `--profile standard` 可采集三个视口，使用 `--profile minimal` 只采集桌面和移动端。未采集的条件应该记录为证据缺口，而不是由 Agent 猜测。
 
-## Works across Agents
+## 适用于不同 Agent
 
-There is no universal Skill discovery format, so the same workflow is exposed through independent layers:
+目前没有所有 Agent 通用的 Skill 发现格式，因此同一套工作流通过多个独立入口提供：
 
-| Interface | Who can use it |
+| 接口 | 适用对象 |
 | --- | --- |
-| CLI | Any Agent or human with shell access |
-| MCP stdio server | Any MCP-compatible client |
-| `SKILL.md` | Skill-aware Agents |
-| `AGENTS.md` | Coding Agents that read repository instructions |
+| CLI | 任何拥有终端权限的 Agent 或用户 |
+| MCP stdio server | 任何兼容 MCP 的客户端 |
+| `SKILL.md` | 支持 Skill 的 Agent |
+| `AGENTS.md` | 会读取仓库指令的 Coding Agent |
 | `CLAUDE.md` | Claude Code |
 | `.cursor/rules` | Cursor |
 | Copilot instructions | GitHub Copilot |
-| Portable prompt | Other Agents that accept project instructions |
+| Portable prompt | 可以接收项目指令的其他 Agent |
 
-The runtime automatically tries Playwright, a locally installed Chrome/Chromium/Edge browser, and then the legacy `agent-browser` CLI. No Codex, Claude, Cursor, or other vendor browser capability is required.
+运行时会依次尝试 Playwright、本机安装的 Chrome / Chromium / Edge，以及兼容旧环境的 `agent-browser` CLI。它不依赖 Codex、Claude、Cursor 或其他厂商专属的浏览器能力。
 
-## MCP setup
+### 语言与全球化
+
+- Skill 根据用户当前使用的语言决定交付语言；中文用户默认生成中文说明。
+- `html2style bundle` 默认使用 `zh-CN`，国外用户可以传入 `--locale en`。
+- `START-HERE.md`、`START-HERE.html` 和 `AGENT-HANDOFF.md` 会本地化。
+- CLI 命令、MCP 工具名、文件名和 JSON 字段始终保持英文，保证跨地区自动化兼容。
+- 原网站内容和测量证据保持原文；除非用户明确要求，否则不会自动翻译采集内容。
+
+## MCP 配置
 
 ```bash
 npm run mcp
@@ -212,53 +223,53 @@ npm run mcp
 }
 ```
 
-Tools: `browser_doctor`, `extract_website_evidence`, `extract_style_profile`, `bundle_design_package`, `extract_icon_library`, `render_design_preview`, `render_visual_comparison`, `validate_asset_urls`, and `audit_reconstruction`.
+提供的工具包括：`browser_doctor`、`extract_website_evidence`、`extract_style_profile`、`bundle_design_package`、`extract_icon_library`、`render_design_preview`、`render_visual_comparison`、`validate_asset_urls` 和 `audit_reconstruction`。
 
-See [the example MCP configuration](integrations/mcp.example.json) and [portable Agent prompt](integrations/portable-agent-prompt.md).
+更多内容见 [MCP 配置示例](integrations/mcp.example.json)和[通用 Agent 提示词](integrations/portable-agent-prompt.md)。
 
-## Why this is different
+## 它与其他工具有什么不同
 
-- **Evidence before interpretation:** measured profiles remain separate from Agent-authored design rules.
-- **Responsive by default:** width, height, `<picture>` mappings, selected sources, and rendered geometry are captured explicitly.
-- **Transfer boundaries:** the style workflow distinguishes reusable principles from protected source identity and assets.
-- **Human and machine outputs:** JSON supports automation; Markdown supports Agents; HTML supports visual review.
-- **Verification is part of the workflow:** asset checks and reconstruction audits prevent a polished first viewport from masking incomplete work.
-- **Portable runtime:** CLI and MCP are the product interfaces; vendor adapters are optional discovery aids.
+- **先证据、后解释：** 测量结果与 Agent 总结的设计规则分别保存。
+- **默认覆盖响应式：** 明确采集宽度、高度、`<picture>` 映射、实际选中资源和渲染几何。
+- **明确迁移边界：** 区分可以复用的设计原则与必须替换的原站身份和素材。
+- **同时服务人和机器：** JSON 用于自动化，Markdown 用于 Agent，HTML 用于视觉评审。
+- **验证属于工作流的一部分：** 资源检查与复刻审计可以避免一个漂亮首屏掩盖未完成页面。
+- **运行时可移植：** CLI 和 MCP 是核心产品接口，厂商适配文件只是可选发现入口。
 
-## Related work and scope
+## 相关项目与范围
 
-Website design extraction is an active category. These adjacent projects are useful references for choosing the right tool:
+网站设计提取是一个活跃领域。以下相邻项目适合用来判断你需要哪类工具：
 
-- [Website to Design](https://websitetodesign.com/) imports websites as editable Figma designs.
-- [DesignDNA](https://www.designdna.site/) is a browser extension that exports design-system files for coding tools.
-- [Dembrandt](https://github.com/thevangelist/dembrandt) extracts design tokens, brand signals, and `DESIGN.md` through a CLI and MCP server.
-- [brandmd](https://github.com/yuvrajangadsingh/brandmd) extracts a multi-page design system into agent-readable formats.
+- [Website to Design](https://websitetodesign.com/) 将网站导入为可编辑的 Figma 设计。
+- [DesignDNA](https://www.designdna.site/) 是一个浏览器扩展，可以导出供编码工具使用的设计系统文件。
+- [Dembrandt](https://github.com/thevangelist/dembrandt) 通过 CLI 和 MCP 提取设计 Token、品牌信号与 `DESIGN.md`。
+- [brandmd](https://github.com/yuvrajangadsingh/brandmd) 将多页面设计系统提取为 Agent 可读格式。
 
-HTML2Style focuses on a different handoff problem: preserving responsive browser evidence, separating measurements from interpretation, marking what may or may not be transferred, auditing reconstruction completeness, and delivering the result as one cross-session package. It does not import a page into Figma, claim ownership of captured material, or treat third-party brand assets as reusable output.
+HTML2Style 解决的是不同的交接问题：保留响应式浏览器证据、分离测量与解释、标记哪些内容可以迁移或必须替换、审计完整复刻范围，并把所有内容交付为一个可跨 session 使用的文件夹。它不会把网页导入 Figma，不会声称拥有被采集内容，也不会把第三方品牌素材当作可复用输出。
 
-## Responsible use
+## 负责任地使用
 
-The MIT license applies to this project's code and templates, not to content captured from third-party websites.
+MIT License 只适用于本项目的代码和模板，不适用于从第三方网站采集的内容。
 
-- Review website terms, copyright, trademark, robots policy, and applicable law.
-- Do not publish captured credentials, personal data, private page text, or session material.
-- Do not redistribute source photography, fonts, logos, icons, copy, or distinctive campaign assets without permission.
-- Prefer owned, licensed, or newly created assets for design-language transfer.
-- Treat evidence from login-gated pages as sensitive unless the owner has approved publication.
+- 请检查网站条款、版权、商标、robots policy 和适用法律。
+- 不要发布账号凭据、个人数据、私有页面文本或 session 信息。
+- 未经允许，不要重新分发原站摄影、字体、Logo、图标、文案或独特 campaign 素材。
+- 迁移设计语言时，优先使用自有、已授权或重新创作的素材。
+- 除非页面所有者明确允许公开，否则应把登录后采集的证据视为敏感信息。
 
-## Project status
+## 项目状态
 
-Version `0.5.0` is an early public release. Static and JavaScript-rendered sites are supported. Authentication can be handled through manual login. Complex canvas/WebGL content, closed shadow roots, anti-bot challenges, video timelines, and every possible interaction state are not fully captured; report those as evidence gaps rather than inferring them.
+版本 `0.5.0` 是早期公开版本。当前支持静态网站和 JavaScript 渲染网站，也可以通过手动登录处理鉴权页面。复杂 Canvas / WebGL 内容、closed shadow root、反爬挑战、视频时间线和所有可能的交互状态还无法完整采集；遇到这些情况时应记录为证据缺口，而不是自动推断。
 
-## Development
+## 开发
 
 ```bash
 npm test
 npm run validate
 ```
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. Report security issues according to [SECURITY.md](SECURITY.md).
+提交改动前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。安全问题请按照 [SECURITY.md](SECURITY.md) 提交。
 
 ## License
 
-MIT. Captured website content and assets retain their original owners' rights.
+MIT。被采集网站的内容和素材仍归其原权利人所有。

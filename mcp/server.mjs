@@ -13,7 +13,7 @@ const server = new McpServer(
   { name: "html2style", version: "0.5.0" },
   {
     instructions:
-      "Use browser_doctor first, then extract_website_evidence. For style-only work, call extract_style_profile and synthesize STYLE.md before any implementation. Generate DESIGN.md for replica-specific detail. For complete replicas, validate all asset URLs and audit original versus replica evidence before declaring success. For original sites inspired by a reference, transfer measured design principles while replacing source branding, content, assets, and information architecture.",
+      "Use browser_doctor first, then extract_website_evidence. Follow the user's language for human-facing files: use zh-CN for Chinese users and en for English users, while keeping tool names, filenames, and JSON fields in English. For style-only work, call extract_style_profile and synthesize STYLE.md before any implementation. Generate DESIGN.md for replica-specific detail. For complete replicas, validate all asset URLs and audit original versus replica evidence before declaring success. For original sites inspired by a reference, transfer measured design principles while replacing source branding, content, assets, and information architecture.",
   }
 );
 
@@ -89,6 +89,7 @@ server.registerTool(
       profilePath: z.string().min(1),
       boardPath: z.string().min(1),
       name: z.string().optional(),
+      locale: z.enum(["zh-CN", "en"]).default("zh-CN").describe("Language for human-facing package files"),
       measurementsPath: z.string().optional(),
       evidencePath: z.string().optional(),
       artifactsDir: z.string().optional(),
@@ -97,7 +98,7 @@ server.registerTool(
       iconsDir: z.string().optional(),
     }),
   },
-  async ({ outputDir, stylePath, profilePath, boardPath, name, measurementsPath, evidencePath, artifactsDir, designPath, designBoardPath, iconsDir }) => {
+  async ({ outputDir, stylePath, profilePath, boardPath, name, locale, measurementsPath, evidencePath, artifactsDir, designPath, designBoardPath, iconsDir }) => {
     const args = [
       path.resolve(process.cwd(), outputDir),
       "--style", path.resolve(process.cwd(), stylePath),
@@ -105,6 +106,7 @@ server.registerTool(
       "--board", path.resolve(process.cwd(), boardPath),
     ];
     if (name) args.push("--name", name);
+    args.push("--locale", locale);
     if (measurementsPath) args.push("--measurements", path.resolve(process.cwd(), measurementsPath));
     if (evidencePath) args.push("--evidence", path.resolve(process.cwd(), evidencePath));
     if (artifactsDir) args.push("--artifacts", path.resolve(process.cwd(), artifactsDir));

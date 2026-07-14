@@ -1,4 +1,4 @@
 interface:
   display_name: "HTML2Style"
-  short_description: "Turn a rendered website into reusable design evidence"
-  default_prompt: "Use $html2style to capture this website and deliver one reusable cross-session design package."
+  short_description: "把网站转成可复用、可验证的设计语言包"
+  default_prompt: "使用 $html2style 采集这个网站，并按我的语言生成一套可跨 session 复用的设计语言包。"

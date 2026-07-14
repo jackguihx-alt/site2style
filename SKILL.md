@@ -1,62 +1,72 @@
 ---
 name: html2style
-description: Capture one or more live websites as an evidence-backed, transferable design-language package with an Agent-neutral CLI or MCP interface. Deliver responsive browser evidence, style-profile.json, STYLE.md, a visual HTML style board, and optionally DESIGN.md, assets, icons, a complete reconstruction, or an original site using the measured design logic. Use when the user asks to extract or learn a website's style, reverse-engineer a design system, create a site inspired by a reference without copying its brand, improve DESIGN.md, collect tokens/assets/components/icons, replicate a permitted website, or audit visual fidelity.
+description: 将一个或多个真实网站转化为有证据、可迁移、可跨 session 复用的设计语言包，并通过 Agent 中立的 CLI 或 MCP 使用。默认中文交付，也支持英文。适用于用户要求提取或学习网站风格、反向分析设计系统、基于参考风格创作新网站、完善 DESIGN.md、采集 Token/素材/组件/图标、复刻获准网站或审计视觉还原度。 Use when the user asks to extract or learn a website style, reverse-engineer a design system, transfer measured design logic without copying a brand, replicate a permitted website, or audit visual fidelity.
 ---
 
 # HTML2Style
 
-Turn a real website into portable design evidence and reusable visual rules that another Agent can apply without depending on the original page or a vendor-specific browser.
+把真实网站转化为可移植的设计证据与可复用视觉规则，使其他 Agent 不依赖原网页、原聊天记录或特定厂商浏览器也能继续使用。
 
-Default deliverables:
+## 语言与全球化
 
-- `design-package/`: the default final delivery folder. It contains one human entry point, one cross-session Agent handoff, the core style files, a manifest, and optional advanced/evidence subfolders.
-- `START-HERE.md`: tells a human which single file to open for their role.
-- `START-HERE.html`: double-click entry point with the visual board link and a copyable cross-session prompt.
-- `AGENT-HANDOFF.md`: self-contained instructions that let a new Agent session reuse the package without the original conversation.
-- `manifest.json`: stable machine-readable package identity, entry points, source metadata, file roles, and evidence gaps.
-- `STYLE.md`: compact transferable design language for reuse in a different product or business context.
-- `style-profile.json`: deterministic measurements behind `STYLE.md`, generated from browser evidence.
-- `style-board.html`: human-readable presentation of the design DNA when style extraction is the requested scope.
-- `DESIGN.md`: structured source of truth for agents.
-- `design-system.html`: visual HTML presentation of the system for humans, rendered with the extracted tokens and components.
-- Icon library: searchable HTML page, `icons-data.json`, and standalone SVG files when icons are available.
-- Asset manifest: image, background, font, SVG, and resource URLs with responsive reference screenshots.
-- Fidelity comparison: a representative sample for design-system validation, or the complete visible page when the user asks for a full replica.
-- Design-language transfer: an original website for a new person, product, or business that reuses measured visual principles without copying source branding, content, or proprietary assets.
+- 中文优先：当用户使用中文或未明确指定语言时，人类可读交付物默认使用 `zh-CN`。
+- 国际用户：当用户使用英文或明确要求英文时，使用 `en`。
+- 执行 `html2style bundle` 时显式传入 `--locale zh-CN` 或 `--locale en`；MCP 的 `bundle_design_package` 使用同名 `locale` 参数。
+- 本地化 `START-HERE.md`、`START-HERE.html`、`AGENT-HANDOFF.md` 和最终用户说明。
+- CLI 命令、MCP 工具名、文件名、JSON schema、Token 名称和代码标识符始终保持英文，避免破坏跨地区自动化。
+- 原网站文案和测量证据保持原始语言。除非用户明确要求，不要把内容翻译与设计提取混在一起。
+- 回复语言跟随用户当前语言，而不是参考网站语言。
 
-Use evidence from the live page first: DOM, computed styles, CSS variables, network resources, screenshots for verification, and visible interactions. Do not infer precise token values from memory or screenshots alone. Do not replace original images, logos, or icons with approximations when extractable source assets exist.
+Default deliverables / 默认交付物：
 
-## Start
+- `design-package/`：默认最终交付文件夹，包含人类入口、跨 session Agent 交接、核心风格文件、manifest 和可选的 advanced/evidence 子目录。
+- `START-HERE.md`：告诉不同角色应该先打开哪个文件。
+- `START-HERE.html`：可以双击打开的可视化入口，包含风格板链接和可复制的跨 session 提示词。
+- `AGENT-HANDOFF.md`：自包含交接说明，让新 Agent session 无需旧聊天记录也能复用。
+- `manifest.json`：稳定的机器可读 package 身份、入口、来源信息、文件角色与证据缺口。
+- `STYLE.md`：可迁移到不同产品或业务场景的精炼设计语言。
+- `style-profile.json`：从浏览器证据生成、支撑 `STYLE.md` 的确定性测量。
+- `style-board.html`：当任务是风格提取时，供人类查看设计 DNA 的可视化页面。
+- `DESIGN.md`：供 Agent 使用的结构化设计系统事实来源。
+- `design-system.html`：使用提取到的 Token 和组件渲染，供人类查看的 HTML 设计系统。
+- 图标库：存在图标时，生成可搜索 HTML、`icons-data.json` 和独立 SVG 文件。
+- 资源 manifest：图片、背景、字体、SVG、资源 URL 和响应式参考截图。
+- 还原度对比：设计系统验证使用代表性样本；用户要求完整复刻时覆盖整个可见页面。
+- 设计语言迁移：为新人物、产品或业务创建原创网站，复用测量得到的视觉原则，但不复制原站品牌、内容或专有素材。
 
-1. Determine the mode:
-   - Style extraction: user wants to understand or reuse the visual language. Deliver the style package without building a replica or new website unless requested.
-   - New extraction: user gives URL(s), create the full deliverable set.
-   - Supplement existing work: user gives `DESIGN.md` and URL(s), read the existing file first, list gaps, then collect only the missing evidence.
-   - Complete replication: inventory and reproduce every visible section and repeated item. Do not silently downgrade this to a representative sample.
-   - Design-language transfer: user gives a reference site or `DESIGN.md` plus a new purpose, create an original information architecture and content system using the transferable design principles.
-2. Check tool fit:
-   - Run `html2style doctor` or the MCP `browser_doctor` tool first.
-   - Use the bundled Agent-neutral browser pipeline when the page needs JavaScript rendering, login, computed styles, CSS variables, SVG sprites, screenshots, or interaction states.
-   - A host Agent's own browser tool may supplement inspection, but it must not be a requirement for the workflow.
-   - Use static fetch only when the public HTML already contains the target content and precise computed styles are not required.
-   - If browser tooling is unavailable, read `references/browser-tooling-bootstrap.md` and guide setup instead of silently downgrading for dynamic pages.
-3. Scope pages and viewports:
-   - If the site clearly has distinct page types and only one URL was provided, ask for 2-5 representative URLs when that would materially improve page-pattern coverage.
-   - For simple one-page sites, proceed with the single URL.
-   - Use the `full` profile by default: desktop tall/short, tablet tall/short, and mobile. This covers responsive image sources controlled by both width and height.
-   - Use `standard` or `minimal` only when speed materially matters, and record the skipped responsive conditions.
-   - Keep viewport dimensions identical when comparing the original and reconstruction.
-4. Handle login safely:
-   - Use `--headed --login-wait <seconds>` to open a visible temporary browser and let the user sign in manually.
-   - Do not ask for credentials, automate MFA bypass, or choose accounts for the user.
+优先使用真实页面证据：DOM、计算样式、CSS 变量、网络资源、验证截图和可见交互。不要只凭记忆或截图推断精确 Token；能够提取原始图片、Logo 或图标时，不要用近似占位物替代。
 
-## Portability Contract
+## 开始 / Start
 
-- Any Agent with shell access can use the `html2style` CLI.
-- Any MCP-compatible Agent can use the bundled stdio server in `mcp/server.mjs`.
-- `SKILL.md`, `AGENTS.md`, and vendor adapter files are discovery aids, not runtime dependencies.
-- Do not require Codex In-app Browser, Claude browser tools, Cursor browser tools, or another vendor-specific integration.
-- Do not bundle a browser executable. Detect Playwright or a local Chrome/Chromium/Edge installation and provide setup guidance when neither exists.
+1. 确定模式：
+   - 风格提取：用户希望理解或复用视觉语言。只交付风格包，除非用户要求，否则不要额外构建复刻站或新网站。
+   - 全新采集：用户提供 URL，创建完整交付物。
+   - 补充现有工作：用户提供 `DESIGN.md` 和 URL。先读现有文件、列出缺口，只采集缺失证据。
+   - 完整复刻：清点并复现所有可见区块和重复项目，不得静默降级为代表性样本。
+   - 设计语言迁移：用户提供参考网站或 `DESIGN.md` 与新用途，使用可迁移设计原则创建原创信息架构和内容系统。
+2. 检查工具：
+   - 首先运行 `html2style doctor` 或 MCP `browser_doctor`。
+   - 页面需要 JavaScript 渲染、登录、计算样式、CSS 变量、SVG sprite、截图或交互状态时，使用内置的 Agent 中立浏览器流程。
+   - 宿主 Agent 自带的浏览器工具可以辅助检查，但不能成为这套工作流的必要依赖。
+   - 只有公开 HTML 已包含目标内容且不需要精确计算样式时，才使用静态抓取。
+   - 浏览器工具不可用时，阅读 `references/browser-tooling-bootstrap.md` 并指导安装，不要对动态页面静默降级。
+3. 确定页面和视口范围：
+   - 网站明显包含不同页面类型，而用户只提供一个 URL 时，如果能显著改善页面模式覆盖，可请求 2-5 个代表性 URL。
+   - 简单单页网站直接使用一个 URL。
+   - 默认使用 `full`：桌面高/短、平板高/短和移动端，覆盖同时受宽度与高度控制的响应式图片。
+   - 只有速度明显更重要时才使用 `standard` 或 `minimal`，并记录跳过的响应式条件。
+   - 对比原站和复刻站时保持视口尺寸完全一致。
+4. 安全处理登录：
+   - 使用 `--headed --login-wait <seconds>` 打开临时可见浏览器，让用户手动登录。
+   - 不要索取凭据、自动绕过 MFA 或替用户选择账号。
+
+## 可移植性约定
+
+- 拥有终端权限的任何 Agent 都可以使用 `html2style` CLI。
+- 兼容 MCP 的任何 Agent 都可以使用 `mcp/server.mjs` 中的 stdio server。
+- `SKILL.md`、`AGENTS.md` 和厂商适配文件只是发现入口，不是运行时依赖。
+- 不得要求 Codex In-app Browser、Claude 浏览器工具、Cursor 浏览器工具或其他厂商专属集成。
+- 不捆绑浏览器可执行文件。检测 Playwright 或本机 Chrome / Chromium / Edge；都不存在时提供安装指引。
 
 ## Extraction Passes
 

@@ -44,21 +44,52 @@ test("bundle creates a portable cross-session design package", async () => {
 
   assert.match(report.packageId, /^design-language-[a-f0-9]{12}$/);
   assert.equal(manifest.packageId, report.packageId);
+  assert.equal(manifest.locale, "zh-CN");
   assert.equal(manifest.entrypoints.human, "START-HERE.html");
   assert.equal(manifest.entrypoints.agent, "AGENT-HANDOFF.md");
   assert.equal(manifest.source.url, "https://example.com");
   assert.ok(manifest.files.some((item) => item.path === "evidence/evidence.json"));
-  assert.match(start, /another project or opened in a later AI session/);
+  assert.match(start, /之后的新 AI session/);
   assert.match(start, /Motion was not captured/);
-  assert.match(handoff, /Do not browse or re-extract/);
+  assert.match(handoff, /不要浏览或重新采集/);
   assert.match(handoff, /Package ID/);
   await fs.access(path.join(output, "STYLE.md"));
   const startHtml = await fs.readFile(path.join(output, "START-HERE.html"), "utf8");
-  assert.match(startHtml, /View style board/);
-  assert.match(startHtml, /Copy Agent prompt/);
+  assert.match(startHtml, /查看风格板/);
+  assert.match(startHtml, /复制 Agent 提示词/);
   await fs.access(path.join(output, "style-board.html"));
   await fs.access(path.join(output, "style-profile.json"));
   await fs.access(path.join(output, "evidence/evidence.json"));
+});
+
+test("bundle can generate English human-facing files", async () => {
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "website-design-package-en-"));
+  const style = path.join(temp, "STYLE.md");
+  const profile = path.join(temp, "profile.json");
+  const board = path.join(temp, "board.html");
+  const output = path.join(temp, "design-package");
+  await Promise.all([
+    fs.writeFile(style, "# STYLE: Test\n", "utf8"),
+    fs.writeFile(profile, "{}", "utf8"),
+    fs.writeFile(board, "<!doctype html><html></html>", "utf8"),
+  ]);
+
+  const result = spawnSync(process.execPath, [
+    script,
+    output,
+    "--style", style,
+    "--profile", profile,
+    "--board", board,
+    "--locale", "en",
+  ], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+
+  const manifest = JSON.parse(await fs.readFile(path.join(output, "manifest.json"), "utf8"));
+  const start = await fs.readFile(path.join(output, "START-HERE.md"), "utf8");
+  const handoff = await fs.readFile(path.join(output, "AGENT-HANDOFF.md"), "utf8");
+  assert.equal(manifest.locale, "en");
+  assert.match(start, /another project or opened in a later AI session/);
+  assert.match(handoff, /Do not browse or re-extract/);
 });
 
 test("bundle refuses to merge into an existing directory", async () => {

@@ -42,6 +42,7 @@ const profile = parseProfile(profileText);
 if (!/<html\b/i.test(boardText)) throw new Error("style-board input does not appear to be an HTML document");
 
 const packageName = clean(options.name) || extractStyleName(styleText) || "Website Design Language";
+const locale = normalizeLocale(options.locale);
 const packageId = `design-language-${crypto.createHash("sha256").update(styleText).update(profileText).digest("hex").slice(0, 12)}`;
 const tempPath = path.join(path.dirname(outputPath), `.${path.basename(outputPath)}.tmp-${process.pid}`);
 const files = coreFiles();
@@ -66,6 +67,7 @@ try {
     packageType: "website-design-language",
     packageId,
     name: packageName,
+    locale,
     createdAt: new Date().toISOString(),
     source: {
       url: profile.source?.url ?? null,
@@ -80,17 +82,21 @@ try {
       machine: "style-profile.json",
     },
     reuse: {
-      instruction: "Ask any Agent to read AGENT-HANDOFF.md before creating or reviewing a design.",
-      reExtractWhen: "The reference site changed or the evidence gaps block the new task.",
+      instruction: locale === "zh-CN"
+        ? "在创建或评审设计前，让 Agent 先阅读 AGENT-HANDOFF.md。"
+        : "Ask any Agent to read AGENT-HANDOFF.md before creating or reviewing a design.",
+      reExtractWhen: locale === "zh-CN"
+        ? "参考网站发生变化，或证据缺口阻碍新任务时。"
+        : "The reference site changed or the evidence gaps block the new task.",
     },
     evidenceGaps: Array.isArray(profile.evidenceGaps) ? profile.evidenceGaps : [],
     files,
   };
 
   await Promise.all([
-    fs.writeFile(path.join(tempPath, "START-HERE.md"), startHere({ packageName, packageId, manifest }), "utf8"),
-    fs.writeFile(path.join(tempPath, "START-HERE.html"), startHereHtml({ packageName, packageId, manifest }), "utf8"),
-    fs.writeFile(path.join(tempPath, "AGENT-HANDOFF.md"), agentHandoff({ packageName, packageId, manifest }), "utf8"),
+    fs.writeFile(path.join(tempPath, "START-HERE.md"), startHere({ packageName, packageId, manifest, locale }), "utf8"),
+    fs.writeFile(path.join(tempPath, "START-HERE.html"), startHereHtml({ packageName, packageId, manifest, locale }), "utf8"),
+    fs.writeFile(path.join(tempPath, "AGENT-HANDOFF.md"), agentHandoff({ packageName, packageId, manifest, locale }), "utf8"),
     fs.writeFile(path.join(tempPath, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`, "utf8"),
   ]);
   await fs.rename(tempPath, outputPath);
@@ -99,6 +105,7 @@ try {
     outputPath,
     packageId,
     name: packageName,
+    locale,
     sourceUrl: manifest.source.url,
     entrypoint: path.join(outputPath, "START-HERE.md"),
     agentHandoff: path.join(outputPath, "AGENT-HANDOFF.md"),
@@ -132,6 +139,7 @@ function printUsage() {
 
 Options:
   --name <name>                 Human-readable package name
+  --locale <zh-CN|en>           Human-facing output language (default: zh-CN)
   --measurements <file>         STYLE-measurements.md
   --evidence <file>             Browser evidence JSON
   --artifacts <dir>             Screenshots and evidence artifacts
@@ -178,6 +186,14 @@ function clean(value) {
   return `${value ?? ""}`.replace(/\s+/g, " ").trim();
 }
 
+function normalizeLocale(value) {
+  const locale = clean(value) || "zh-CN";
+  if (!["zh-CN", "en"].includes(locale)) {
+    throw new Error(`Unsupported locale: ${locale}. Use zh-CN or en.`);
+  }
+  return locale;
+}
+
 function extractStyleName(text) {
   return clean(text.match(/^#\s+(?:STYLE:\s*)?(.+)$/m)?.[1]);
 }
@@ -210,7 +226,8 @@ async function copyOptionalDirectory(source, root, relativePath, role, files) {
   files.push({ path: relativePath, role, required: false });
 }
 
-function startHere({ packageName, packageId, manifest }) {
+function startHere({ packageName, packageId, manifest, locale }) {
+  if (locale === "zh-CN") return startHereZh({ packageName, packageId, manifest });
   const gaps = manifest.evidenceGaps.length
     ? manifest.evidenceGaps.map((gap) => `- ${gap}`).join("\n")
     : "- No evidence gaps were recorded in the measured profile.";
@@ -252,20 +269,113 @@ This package transfers design rules, not ownership. Source branding, copy, photo
 `;
 }
 
-function startHereHtml({ packageName, packageId, manifest }) {
+function startHereZh({ packageName, packageId, manifest }) {
+  const gaps = manifest.evidenceGaps.length
+    ? manifest.evidenceGaps.map((gap) => `- ${gap}`).join("\n")
+    : "- 测量结果中没有记录证据缺口。";
+  return `# 从这里开始：${packageName}
+
+Package ID：\`${packageId}\`
+
+这个文件夹是一套可移植的设计语言包。你可以把它整体移动到另一个项目，或在之后的新 AI session 中使用，不需要原来的聊天记录。
+
+## 根据你的角色选择入口
+
+| 你的角色 | 打开的文件 |
+| --- | --- |
+| 设计师或产品负责人 | \`START-HERE.html\` |
+| 开始新 session 的 AI Agent | \`AGENT-HANDOFF.md\` |
+| 阅读设计规则的开发者 | \`STYLE.md\` |
+| 工具或自动化流程 | \`manifest.json\` 和 \`style-profile.json\` |
+
+## 在新 session 中复用
+
+把整个文件夹移动到新项目，然后告诉 Agent：
+
+> 阅读这个设计包中的 \`AGENT-HANDOFF.md\`，把它应用到我的新任务，遵守迁移边界。除非设计包明确提示证据缺失，否则不要重新采集参考网站。
+
+Agent 只需要了解新项目的受众、主要任务、内容和用户拥有的素材，不需要读取参考网站相关的旧聊天记录。
+
+## 一开始可以忽略的文件
+
+- \`advanced/\`：可选的详细设计系统和图标材料。
+- \`evidence/\`：可选的原始浏览器证据和截图。
+
+## 证据缺口
+
+${gaps}
+
+## 权利边界
+
+这个设计包迁移的是设计规则，不是素材所有权。除非已经获得单独授权，否则必须替换原站品牌、文案、摄影、字体、图标、campaign 概念和其他受保护素材。
+`;
+}
+
+function startHereHtml({ packageName, packageId, manifest, locale }) {
+  const copy = locale === "zh-CN" ? {
+    lang: "zh-CN",
+    titleSuffix: "从这里开始",
+    sourceUnknown: "未记录",
+    prompt: "阅读这个设计包中的 AGENT-HANDOFF.md，把它应用到我的新任务，遵守迁移边界。除非设计包明确提示证据缺失，否则不要重新采集参考网站。",
+    noGaps: "测量结果中没有记录证据缺口。",
+    eyebrow: "可移植设计语言包",
+    packageLabel: "设计包",
+    sourceLabel: "来源",
+    viewBoard: "查看风格板",
+    copyPrompt: "复制 Agent 提示词",
+    entryTitle: "根据角色选择入口",
+    sessionTitle: "新 AI session",
+    sessionBody: "让 Agent 阅读",
+    reviewTitle: "设计评审",
+    reviewBody: "打开",
+    developerTitle: "开发者",
+    developerBody: "阅读",
+    automationTitle: "自动化",
+    automationBody: "从这里开始：",
+    promptTitle: "跨 session 提示词",
+    gapsTitle: "证据缺口",
+    rightsTitle: "权利边界",
+    rightsBody: "这个设计包迁移的是设计规则，不是素材所有权。除非已经获得单独授权，否则请替换原站品牌、文案、摄影、字体、图标和 campaign 概念。",
+    copied: "已复制 Agent 提示词。",
+  } : {
+    lang: "en",
+    titleSuffix: "Start Here",
+    sourceUnknown: "Not recorded",
+    prompt: "Read AGENT-HANDOFF.md in this design package. Apply it to my new task, preserve the transfer boundaries, and do not re-extract the source website unless the package says evidence is missing.",
+    noGaps: "No evidence gaps were recorded in the measured profile.",
+    eyebrow: "Portable design-language package",
+    packageLabel: "Package",
+    sourceLabel: "Source",
+    viewBoard: "View style board",
+    copyPrompt: "Copy Agent prompt",
+    entryTitle: "Use the right entry point",
+    sessionTitle: "New AI session",
+    sessionBody: "Ask the Agent to read",
+    reviewTitle: "Design review",
+    reviewBody: "Open",
+    developerTitle: "Developer",
+    developerBody: "Read",
+    automationTitle: "Automation",
+    automationBody: "Start from",
+    promptTitle: "Cross-session prompt",
+    gapsTitle: "Evidence gaps",
+    rightsTitle: "Rights boundary",
+    rightsBody: "This package transfers design rules, not ownership. Replace source branding, copy, photography, fonts, icons, and campaign concepts unless separately licensed.",
+    copied: "Agent prompt copied.",
+  };
   const safeName = escapeHtml(packageName);
   const safeId = escapeHtml(packageId);
-  const safeSource = escapeHtml(manifest.source.url || "Not recorded");
-  const prompt = "Read AGENT-HANDOFF.md in this design package. Apply it to my new task, preserve the transfer boundaries, and do not re-extract the source website unless the package says evidence is missing.";
+  const safeSource = escapeHtml(manifest.source.url || copy.sourceUnknown);
+  const prompt = copy.prompt;
   const gapItems = manifest.evidenceGaps.length
     ? manifest.evidenceGaps.map((gap) => `<li>${escapeHtml(gap)}</li>`).join("")
-    : "<li>No evidence gaps were recorded in the measured profile.</li>";
+    : `<li>${copy.noGaps}</li>`;
   return `<!doctype html>
-<html lang="en">
+<html lang="${copy.lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>${safeName} - Start Here</title>
+  <title>${safeName} - ${copy.titleSuffix}</title>
   <style>
     :root { color-scheme: light; --ink:#171717; --muted:#626267; --line:#d9d9de; --surface:#fff; --soft:#f5f5f7; --accent:#087f5b; }
     * { box-sizing:border-box; }
@@ -297,35 +407,35 @@ function startHereHtml({ packageName, packageId, manifest }) {
 <body>
   <main>
     <header>
-      <p class="eyebrow">Portable design-language package</p>
+      <p class="eyebrow">${copy.eyebrow}</p>
       <h1>${safeName}</h1>
-      <p class="meta">Package <code>${safeId}</code> / Source ${safeSource}</p>
+      <p class="meta">${copy.packageLabel} <code>${safeId}</code> / ${copy.sourceLabel} ${safeSource}</p>
       <div class="actions">
-        <a href="style-board.html">View style board</a>
-        <button type="button" id="copyPrompt">Copy Agent prompt</button>
+        <a href="style-board.html">${copy.viewBoard}</a>
+        <button type="button" id="copyPrompt">${copy.copyPrompt}</button>
       </div>
       <p class="status" id="copyStatus" aria-live="polite"></p>
     </header>
     <section>
-      <h2>Use the right entry point</h2>
+      <h2>${copy.entryTitle}</h2>
       <div class="routes">
-        <article><h3>New AI session</h3><p>Ask the Agent to read <code>AGENT-HANDOFF.md</code>.</p></article>
-        <article><h3>Design review</h3><p>Open <code>style-board.html</code>.</p></article>
-        <article><h3>Developer</h3><p>Read <code>STYLE.md</code>.</p></article>
-        <article><h3>Automation</h3><p>Start from <code>manifest.json</code>.</p></article>
+        <article><h3>${copy.sessionTitle}</h3><p>${copy.sessionBody} <code>AGENT-HANDOFF.md</code>.</p></article>
+        <article><h3>${copy.reviewTitle}</h3><p>${copy.reviewBody} <code>style-board.html</code>.</p></article>
+        <article><h3>${copy.developerTitle}</h3><p>${copy.developerBody} <code>STYLE.md</code>.</p></article>
+        <article><h3>${copy.automationTitle}</h3><p>${copy.automationBody} <code>manifest.json</code>.</p></article>
       </div>
     </section>
     <section>
-      <h2>Cross-session prompt</h2>
+      <h2>${copy.promptTitle}</h2>
       <pre id="promptText">${escapeHtml(prompt)}</pre>
     </section>
     <section>
-      <h2>Evidence gaps</h2>
+      <h2>${copy.gapsTitle}</h2>
       <ul>${gapItems}</ul>
     </section>
     <section>
-      <h2>Rights boundary</h2>
-      <p class="quiet">This package transfers design rules, not ownership. Replace source branding, copy, photography, fonts, icons, and campaign concepts unless separately licensed.</p>
+      <h2>${copy.rightsTitle}</h2>
+      <p class="quiet">${copy.rightsBody}</p>
     </section>
   </main>
   <script>
@@ -339,7 +449,7 @@ function startHereHtml({ packageName, packageId, manifest }) {
         const area = document.createElement("textarea");
         area.value = value; document.body.append(area); area.select(); document.execCommand("copy"); area.remove();
       }
-      status.textContent = "Agent prompt copied.";
+      status.textContent = ${JSON.stringify(copy.copied)};
     });
   </script>
 </body>
@@ -347,7 +457,8 @@ function startHereHtml({ packageName, packageId, manifest }) {
 `;
 }
 
-function agentHandoff({ packageName, packageId, manifest }) {
+function agentHandoff({ packageName, packageId, manifest, locale }) {
+  if (locale === "zh-CN") return agentHandoffZh({ packageName, packageId, manifest });
   return `# Agent Handoff: ${packageName}
 
 Package ID: \`${packageId}\`
@@ -386,6 +497,48 @@ Then:
 ## Response requirement
 
 State which package ID was used, what was retained, what was reinterpreted, what was replaced, and any evidence limitation that affected the result.
+`;
+}
+
+function agentHandoffZh({ packageName, packageId, manifest }) {
+  return `# Agent 交接：${packageName}
+
+Package ID：\`${packageId}\`
+Package type：\`website-design-language\`
+参考来源：${manifest.source.url ? `\`${manifest.source.url}\`` : "未记录"}
+
+## Session 约定
+
+这个文件是新 AI session 唯一需要的入口。设计包已经完成采集和测量。除非用户要求刷新，或证据缺口阻碍当前任务，否则不要浏览或重新采集参考网站。
+
+## 阅读顺序
+
+1. 完整阅读 \`STYLE.md\`，它是可迁移设计语言的事实来源。
+2. 只有在需要核对精确测量、响应式数值或置信度时，才读取 \`style-profile.json\`。
+3. 可以进行视觉评审时，打开 \`style-board.html\`。
+4. 只有需要实现细节时才读取 \`advanced/\`；只有审计结论时才读取 \`evidence/\`。
+
+## 应用到新任务
+
+开始实现前，先明确：
+
+- 新产品的目标受众。
+- 主要用户任务或转化目标。
+- 必需内容与信息架构。
+- 用户拥有或获准使用的素材。
+- 目标平台与响应式条件。
+
+然后：
+
+1. 保留 \`STYLE.md\` 中测量得到的层级、节奏、密度、对比、形状、图片方向、动效克制和响应式变化。
+2. 遵守所有 \`retain / reinterpret / replace\` 边界。
+3. 根据新任务创建原创结构，默认不要照搬参考网站的页面顺序。
+4. 除非用户提供了相应权利，否则替换原站品牌、名称、文案、图标、摄影、字体和 campaign 概念。
+5. 验证桌面端与移动端层级、图片构图、文字适配、对比度、焦点状态、资源健康和对 \`STYLE.md\` 的遵守情况。
+
+## 回复要求
+
+说明使用了哪个 package ID、保留了什么、重新解释了什么、替换了什么，以及哪些证据限制影响了结果。
 `;
 }
 

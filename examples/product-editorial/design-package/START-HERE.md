@@ -1,35 +1,35 @@
-# Start Here: Product Editorial Example
+# 从这里开始：Product Editorial Example
 
-Package ID: `design-language-0dd741359bac`
+Package ID：`design-language-0dd741359bac`
 
-This folder is a portable design-language package. It can be moved into another project or opened in a later AI session without the original chat history.
+这个文件夹是一套可移植的设计语言包。你可以把它整体移动到另一个项目，或在之后的新 AI session 中使用，不需要原来的聊天记录。
 
-## Choose one entry point
+## 根据你的角色选择入口
 
-| You are | Open |
+| 你的角色 | 打开的文件 |
 | --- | --- |
-| A designer or product owner | `START-HERE.html` |
-| An AI Agent starting a new session | `AGENT-HANDOFF.md` |
-| A developer reading the rules | `STYLE.md` |
-| A tool or automated workflow | `manifest.json` and `style-profile.json` |
+| 设计师或产品负责人 | `START-HERE.html` |
+| 开始新 session 的 AI Agent | `AGENT-HANDOFF.md` |
+| 阅读设计规则的开发者 | `STYLE.md` |
+| 工具或自动化流程 | `manifest.json` 和 `style-profile.json` |
 
-## Reuse in another session
+## 在新 session 中复用
 
-Move this entire folder into the new project, then tell the Agent:
+把整个文件夹移动到新项目，然后告诉 Agent：
 
-> Read `AGENT-HANDOFF.md` in this design package. Apply it to my new task, preserve the transfer boundaries, and do not re-extract the source website unless the package says evidence is missing.
+> 阅读这个设计包中的 `AGENT-HANDOFF.md`，把它应用到我的新任务，遵守迁移边界。除非设计包明确提示证据缺失，否则不要重新采集参考网站。
 
-The Agent should ask for or infer only the new audience, primary task, content, and owned assets. The reference-site conversation is not required.
+Agent 只需要了解新项目的受众、主要任务、内容和用户拥有的素材，不需要读取参考网站相关的旧聊天记录。
 
-## Files you can ignore initially
+## 一开始可以忽略的文件
 
-- `advanced/`: detailed design-system and icon material, when included.
-- `evidence/`: raw browser evidence and screenshots, when included.
+- `advanced/`：可选的详细设计系统和图标材料。
+- `evidence/`：可选的原始浏览器证据和截图。
 
-## Evidence gaps
+## 证据缺口
 
 - No interaction-state evidence was captured.
 
-## Rights boundary
+## 权利边界
 
-This package transfers design rules, not ownership. Source branding, copy, photography, fonts, icons, campaign concepts, and other protected assets must be replaced unless separately licensed.
+这个设计包迁移的是设计规则，不是素材所有权。除非已经获得单独授权，否则必须替换原站品牌、文案、摄影、字体、图标、campaign 概念和其他受保护素材。
