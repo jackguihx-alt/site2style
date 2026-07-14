@@ -212,13 +212,38 @@ const roleContent = {
   },
 };
 
-let currentLanguage = localStorage.getItem("html2style-language") || (navigator.language.startsWith("zh") ? "zh" : "en");
+const languageStorage = {
+  get() {
+    try {
+      return window.localStorage.getItem("html2style-language") || window.history.state?.html2styleLanguage || null;
+    } catch {
+      return window.history.state?.html2styleLanguage || null;
+    }
+  },
+  set(language) {
+    try {
+      window.localStorage.setItem("html2style-language", language);
+    } catch {
+      // Local files can deny storage access. The switch should still work in-memory.
+    }
+    try {
+      window.history.replaceState({ ...window.history.state, html2styleLanguage: language }, "");
+    } catch {
+      // Some embedded browsers also restrict history state for local files.
+    }
+  },
+};
+
+const preferredLanguage = String(navigator.language || "en").toLowerCase().startsWith("zh") ? "zh" : "en";
+let currentLanguage = languageStorage.get() || preferredLanguage;
 let currentRole = "human";
 
 function setLanguage(language) {
+  if (!translations[language]) return;
   currentLanguage = language;
-  localStorage.setItem("html2style-language", language);
+  languageStorage.set(language);
   document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+  document.documentElement.dataset.language = language;
   document.title = language === "zh"
     ? "HTML2Style | 给每一个 Agent 的网站设计证据"
     : "HTML2Style | Website design evidence for every Agent";
