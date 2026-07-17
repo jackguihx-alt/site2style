@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Editorial Preview</title>
+    <meta name="color-scheme" content="light" />
+    <style>
+      :root {
+        --page-bg: rgb(255,255,255);
+        --page-bg-muted: rgb(255, 255, 255);
+        --surface-bg: rgb(255,255,255);
+        --surface-bg-muted: rgb(255, 255, 255);
+        --surface-border: rgb(214,214,219);
+        --surface-border-strong: rgb(223, 223, 223);
+        --surface-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.04), 0 8px 8px -8px rgba(0, 0, 0, 0.04);
+        --surface-shadow-soft: 0 0 0 1px rgb(214,214,219);
+        --ink: #171717;
+        --muted: #4d4d4d;
+        --subtle: rgb(148, 148, 148);
+        --accent: #0072f5;
+        --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
+        --body-size: 18px;
+        --body-line: 32px;
+        --body-weight: 600;
+        --label-size: 12px;
+        --label-line: 16px;
+        --label-track: 0.04em;
+        --title-size: 32px;
+        --title-line: 38px;
+        --title-track: -0.03em;
+        --section-size: 32px;
+        --section-line: 40px;
+        --section-track: -0.02em;
+        --source-size: 13px;
+        --source-line: 28px;
+        --space-1: 8px;
+        --space-2: 12px;
+        --space-3: 16px;
+        --space-4: 24px;
+        --space-5: 32px;
+        --space-6: 40px;
+        --radius-panel: 8px;
+        --radius-card: 8px;
+        --radius-micro: 6px;
+        --radius-pill: 999px;
+        --button-height: 40px;
+        --button-font-size: 12px;
+        --button-weight: 500;
+        --button-radius: 999px;
+        --secondary-button-radius: 999px;
+        --layout-gap: 24px;
+        --page-padding: 24px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: var(--body-size);
+        font-weight: var(--body-weight);
+        line-height: var(--body-line);
+        background:
+          radial-gradient(circle at top, color-mix(in srgb, var(--accent) 8%, transparent), transparent 30%),
+          linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-muted) 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background-image:
+          linear-gradient(color-mix(in srgb, var(--surface-border) 56%, transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in srgb, var(--surface-border) 56%, transparent) 1px, transparent 1px);
+        background-size: 100% calc(48px), calc(48px) 100%;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 88%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(1440px, calc(100vw - (var(--page-padding) * 2)));
+        margin: 0 auto;
+        padding: var(--page-padding) 0 calc(var(--page-padding) * 1.2);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(340px, 0.92fr) minmax(420px, 1fr);
+        gap: var(--layout-gap);
+        align-items: start;
+      }
+
+      .stack {
+        display: grid;
+        gap: var(--space-4);
+      }
+
+      .panel {
+        overflow: hidden;
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-panel);
+        background: linear-gradient(180deg, color-mix(in srgb, var(--surface-bg) 88%, white) 0%, var(--surface-bg) 100%);
+        box-shadow: var(--surface-shadow);
+      }
+
+      .panel-inner {
+        padding: var(--space-4);
+      }
+
+      .hero-card {
+        position: relative;
+      }
+
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        left: var(--space-4);
+        right: var(--space-4);
+        top: 0;
+        height: 3px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgb(28,28,30) 0%, rgb(99,99,104) 33%, rgb(255,255,255) 67%, rgb(245,245,247) 100%);
+      }
+
+      .eyebrow {
+        margin-bottom: var(--space-2);
+        color: var(--muted);
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+        letter-spacing: var(--label-track);
+        text-transform: uppercase;
+      }
+
+      .site-title,
+      .section-title {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-weight: 600;
+      }
+
+      .site-title {
+        font-size: var(--title-size);
+        line-height: var(--title-line);
+        letter-spacing: var(--title-track);
+      }
+
+      .descriptor {
+        margin: var(--space-2) 0 0;
+        max-width: 42ch;
+        color: var(--muted);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+      }
+
+      .summary {
+        margin: var(--space-3) 0 0;
+        max-width: 56ch;
+        color: var(--muted);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin: var(--space-3) 0 0;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: calc(8px * 3);
+        padding: 0 var(--space-2);
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-pill);
+        background: var(--surface-bg);
+        color: var(--ink);
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+        box-shadow: var(--surface-shadow-soft);
+      }
+
+      .observed-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-top: var(--space-4);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--surface-border);
+        color: var(--muted);
+        font-size: var(--label-size);
+        overflow-wrap: anywhere;
+      }
+
+      .observed-link::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
+      }
+
+      .section-title {
+        font-size: var(--section-size);
+        line-height: var(--section-line);
+        letter-spacing: var(--section-track);
+      }
+
+      .section-subtitle {
+        margin: var(--space-2) 0 var(--space-4);
+        color: var(--muted);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+      }
+
+      .palette-grid,
+      .theme-mode-grid,
+      .type-list,
+      .component-card,
+      .prompt-list,
+      .mini-grid,
+      .token-table {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .palette-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--space-2);
+      }
+
+      .palette-row.neutral-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .theme-mode-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-3);
+      }
+
+      .theme-mode-card {
+        display: grid;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-card);
+        background: color-mix(in srgb, var(--surface-bg) 92%, white);
+      }
+
+      .theme-mode-card.is-dark {
+        background: #111111;
+        color: #f4f4f4;
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .theme-mode-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
+
+      .theme-mode-label {
+        color: var(--subtle);
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+        letter-spacing: var(--label-track);
+        text-transform: uppercase;
+      }
+
+      .theme-mode-card.is-dark .theme-mode-label {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .theme-mode-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: calc(var(--body-size) - 1px);
+        line-height: calc(var(--body-line) - 4px);
+      }
+
+      .theme-mode-card.is-dark .theme-mode-note {
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .theme-swatch-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-2);
+      }
+
+      .theme-swatch {
+        display: grid;
+        gap: 6px;
+      }
+
+      .theme-swatch-box {
+        height: 72px;
+        border-radius: calc(var(--radius-card) - 4px);
+        border: 1px solid color-mix(in srgb, var(--surface-border-strong) 75%, transparent);
+      }
+
+      .theme-mode-card.is-dark .theme-swatch-box {
+        border-color: rgba(255, 255, 255, 0.14);
+      }
+
+      .theme-swatch-name {
+        color: inherit;
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .theme-swatch-value {
+        color: var(--subtle);
+        font-size: 11px;
+        line-height: 1.3;
+      }
+
+      .theme-mode-card.is-dark .theme-swatch-value {
+        color: rgba(255, 255, 255, 0.62);
+      }
+
+      .swatch {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .swatch-box {
+        min-height: calc(8px * 12);
+        border-radius: var(--radius-card);
+        border: 1px solid color-mix(in srgb, var(--surface-border-strong) 75%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 4%, transparent);
+      }
+
+      .swatch-label,
+      .token-heading,
+      .prompt-card strong,
+      .card-preview h4 {
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+        font-weight: 600;
+      }
+
+      .swatch-meta,
+      .type-metrics,
+      .mini-label,
+      .copy-state,
+      .file-tab,
+      .ghost-button,
+      .segmented button {
+        color: var(--muted);
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+      }
+
+      .type-row {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) auto;
+        gap: var(--space-2);
+        align-items: baseline;
+        padding: var(--space-2) 0;
+        border-top: 1px solid var(--surface-border);
+      }
+
+      .type-row:first-child,
+      .mini-row:first-child,
+      .token-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .type-role {
+        color: var(--muted);
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+        letter-spacing: var(--label-track);
+        text-transform: uppercase;
+      }
+
+      .type-sample {
+        color: var(--ink);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .split-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+
+      .token-row,
+      .mini-row {
+        display: grid;
+        gap: var(--space-2);
+        align-items: start;
+        padding-top: var(--space-2);
+        border-top: 1px solid var(--surface-border);
+      }
+
+      .token-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .mini-row {
+        grid-template-columns: 88px minmax(0, 1fr);
+      }
+
+      .mini-content,
+      .prompt-card p,
+      .card-preview p {
+        color: var(--muted);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+      }
+
+      .radius-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-2);
+      }
+
+      .radius-card,
+      .prompt-card {
+        padding: var(--space-3);
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-card);
+        background: var(--surface-bg-muted);
+        box-shadow: var(--surface-shadow-soft);
+      }
+
+      .radius-demo {
+        aspect-ratio: 1;
+        width: 100%;
+        border: 1px solid var(--surface-border-strong);
+        background: var(--surface-bg);
+      }
+
+      .radius-name {
+        margin-top: var(--space-2);
+        color: var(--ink);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+        font-weight: 600;
+      }
+
+      .radius-value {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: var(--label-size);
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: var(--button-height);
+        padding: 0 var(--space-3);
+        border-radius: var(--button-radius);
+        font-family: var(--font-body);
+        font-size: var(--button-font-size);
+        font-weight: var(--button-weight);
+        line-height: 1;
+        letter-spacing: normal;
+      }
+
+      .cta-primary {
+        border: 1px solid transparent;
+        background: #171717;
+        color: #ffffff;
+        border-radius: 999px;
+      }
+
+      .cta-secondary {
+        border: 1px solid #171717;
+        background: #ffffff;
+        color: #171717;
+        border-radius: 999px;
+        box-shadow: var(--surface-shadow-soft);
+      }
+
+      .card-preview {
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid color-mix(in srgb, var(--surface-border-strong) 72%, transparent);
+        background: var(--surface-bg);
+        color: var(--ink);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.04), 0 8px 8px -8px rgba(0, 0, 0, 0.04);
+      }
+
+      .card-preview h4 {
+        margin: 0 0 var(--space-1);
+      }
+
+      .source-shell {
+        position: sticky;
+        top: var(--page-padding);
+      }
+
+      .source-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+        padding: var(--space-3) var(--space-4) var(--space-2);
+        border-bottom: 1px solid var(--surface-border);
+      }
+
+      .file-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px var(--space-3);
+      }
+
+      .file-tab {
+        padding: 0 0 var(--space-2);
+        border-bottom: 2px solid transparent;
+      }
+
+      .file-tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+        font-weight: 600;
+      }
+
+      .source-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 1px solid var(--surface-border);
+      }
+
+      .segmented {
+        display: inline-flex;
+        padding: 3px;
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-pill);
+        background: var(--surface-bg-muted);
+      }
+
+      .segmented button {
+        border: 0;
+        border-radius: var(--radius-pill);
+        background: transparent;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+
+      .segmented button.is-active {
+        background: var(--surface-bg);
+        color: var(--ink);
+        box-shadow: var(--surface-shadow-soft);
+      }
+
+      .toolbar-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin-left: auto;
+      }
+
+      .ghost-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        background: var(--surface-bg);
+        box-shadow: var(--surface-shadow-soft);
+        cursor: pointer;
+      }
+
+      .source-body {
+        max-height: calc(100vh - (var(--page-padding) * 2) - 120px);
+        overflow: auto;
+      }
+
+      .source-view,
+      .rendered-view {
+        margin: 0;
+        padding: var(--space-4);
+      }
+
+      .source-view {
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: var(--source-size);
+        line-height: var(--source-line);
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: var(--surface-bg);
+      }
+
+      .rendered-view {
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: var(--body-size);
+        line-height: var(--body-line);
+        background: var(--surface-bg);
+      }
+
+      .rendered-view[hidden],
+      .source-view[hidden] {
+        display: none;
+      }
+
+      .rendered-view h2,
+      .rendered-view h3 {
+        margin: var(--space-4) 0 var(--space-2);
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-weight: 600;
+      }
+
+      .rendered-view h2 {
+        font-size: var(--section-size);
+        line-height: var(--section-line);
+        letter-spacing: var(--section-track);
+      }
+
+      .rendered-view h2:first-child {
+        margin-top: 0;
+      }
+
+      .rendered-view h3 {
+        color: var(--muted);
+        font-size: calc(32px - 4px);
+        line-height: calc(38px - 4px);
+      }
+
+      .rendered-view p,
+      .rendered-view li {
+        color: var(--muted);
+      }
+
+      .rendered-view ul,
+      .rendered-view ol {
+        margin: 0 0 var(--space-3) 20px;
+        padding: 0;
+      }
+
+      .rendered-view table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-2) 0 var(--space-4);
+      }
+
+      .rendered-view th,
+      .rendered-view td {
+        padding: var(--space-2) var(--space-2);
+        border: 1px solid var(--surface-border);
+        text-align: left;
+        vertical-align: top;
+        font-size: var(--label-size);
+        line-height: var(--label-line);
+      }
+
+      .rendered-view th {
+        color: var(--ink);
+        background: var(--surface-bg-muted);
+      }
+
+      .rendered-view code {
+        padding: 0.14em 0.4em;
+        border-radius: 6px;
+        background: var(--surface-bg-muted);
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 0.92em;
+      }
+
+      @media (max-width: 1120px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .source-shell {
+          position: relative;
+          top: 0;
+        }
+
+        .source-body {
+          max-height: none;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .shell {
+          width: min(100vw - (12px * 2), 100%);
+          padding-top: 12px;
+        }
+
+        .panel-inner,
+        .source-view,
+        .rendered-view {
+          padding-left: var(--space-3);
+          padding-right: var(--space-3);
+        }
+
+        .palette-row,
+        .palette-row.neutral-row,
+        .theme-mode-grid,
+        .theme-swatch-row,
+        .split-card,
+        .radius-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .type-row,
+        .mini-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="layout">
+        <section class="stack">
+          <article class="panel hero-card">
+            <div class="panel-inner">
+              <div class="eyebrow">Design Preview</div>
+              <h1 class="site-title">Product Editorial</h1>
+              <p class="descriptor">A quiet product editorial system with strong type hierarchy, flat neutral bands, compact act...</p>
+              <div class="chip-row"><span class="chip">Keep one dominant message at eve...</span><span class="chip">Let section scale create rhythm</span><span class="chip">Separate selling and utility den...</span><span class="chip">Build depth through surface cont...</span><span class="chip">Reserve pills for commands</span><span class="chip">Art-direct instead of shrinking...</span></div>
+              <p class="summary">A quiet product editorial system with strong type hierarchy, flat neutral bands, compact actions, and imagery treated as the primary proof.</p>
+              <a class="observed-link" href="https://example.com/fictional-product" target="_blank" rel="noreferrer">https://example.com/fictional-product</a>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Palette</h2>
+              <p class="section-subtitle">Roles and neutrals rendered using the extracted design system rather than a separate display theme.</p>
+              <div class="palette-grid"><div class="palette-row"><div class="swatch">
+    <div class="swatch-box" style="background:rgb(28,28,30);"></div>
+    <div class="swatch-label">Primary foreground</div>
+    <div class="swatch-meta">
+      <span>rgb(28,28,30)</span>
+      <span>Primary foreground</span>
+    </div>
+  </div><div class="swatch">
+    <div class="swatch-box" style="background:rgb(99,99,104);"></div>
+    <div class="swatch-label">Secondary foreground</div>
+    <div class="swatch-meta">
+      <span>rgb(99,99,104)</span>
+      <span>Secondary foreground</span>
+    </div>
+  </div><div class="swatch">
+    <div class="swatch-box" style="background:rgb(255,255,255);"></div>
+    <div class="swatch-label">Page surface</div>
+    <div class="swatch-meta">
+      <span>rgb(255,255,255)</span>
+      <span>Page surface</span>
+    </div>
+  </div></div><div class="palette-row neutral-row"><div class="swatch">
+    <div class="swatch-box" style="background:rgb(245,245,247);"></div>
+    <div class="swatch-label">Alternate surface</div>
+    <div class="swatch-meta">
+      <span>rgb(245,245,247)</span>
+      <span>Alternate surface</span>
+    </div>
+  </div><div class="swatch">
+    <div class="swatch-box" style="background:rgb(0,102,204);"></div>
+    <div class="swatch-label">Action</div>
+    <div class="swatch-meta">
+      <span>rgb(0,102,204)</span>
+      <span>Action</span>
+    </div>
+  </div><div class="swatch">
+    <div class="swatch-box" style="background:rgb(214,214,219);"></div>
+    <div class="swatch-label">Divider</div>
+    <div class="swatch-meta">
+      <span>rgb(214,214,219)</span>
+      <span>Divider</span>
+    </div>
+  </div></div></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Theme Modes</h2>
+              <p class="section-subtitle">If the product supports light and dark themes, both modes should stay visible in the exported design system and preview.</p>
+              <div class="prompt-card"><strong>Single mode detected</strong><p>No explicit <code>Theme Modes</code> section was detected in the markdown. If the product supports both light and dark themes, document both so the preview can render them side by side.</p></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Typography</h2>
+              <p class="section-subtitle">The preview shell itself now uses the extracted typography stack, sizes, line heights, and tracking.</p>
+              <div class="type-list"><div class="type-row">
+        <div class="type-role">Display</div>
+        <div
+          class="type-sample"
+          style="font-size:48px; line-height:56px; font-weight:600; letter-spacing:normal; font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Arial, sans-serif;"
+        >
+          The quick brown fox jumps
+        </div>
+        <div class="type-metrics">56px • 600 • 60.48px</div>
+      </div><div class="type-row">
+        <div class="type-role">Section title</div>
+        <div
+          class="type-sample"
+          style="font-size:40px; line-height:44.8px; font-weight:600; letter-spacing:normal; font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Arial, sans-serif;"
+        >
+          The quick brown fox jumps
+        </div>
+        <div class="type-metrics">40px • 600 • 44.8px</div>
+      </div><div class="type-row">
+        <div class="type-role">Supporting copy</div>
+        <div
+          class="type-sample"
+          style="font-size:21px; line-height:29.4px; font-weight:400; letter-spacing:normal; font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Arial, sans-serif;"
+        >
+          The quick brown fox jumps
+        </div>
+        <div class="type-metrics">21px • 400 • 29.4px</div>
+      </div><div class="type-row">
+        <div class="type-role">Navigation</div>
+        <div
+          class="type-sample"
+          style="font-size:12px; line-height:12px; font-weight:400; letter-spacing:normal; font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Arial, sans-serif;"
+        >
+          The quick brown fox jumps
+        </div>
+        <div class="type-metrics">12px • 400 • 12px</div>
+      </div></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Spacing &amp; Shape</h2>
+              <p class="section-subtitle">Spacing, panel padding, and radius tokens are mapped directly from the layout rules in the markdown.</p>
+              <div class="split-card">
+    <div>
+      <h3 class="token-heading">Spacing</h3>
+      <div class="token-table"><div class="token-row">
+        <span>Base unit</span>
+        <span>8px</span>
+      </div><div class="token-row">
+        <span>Step 2</span>
+        <span>12px</span>
+      </div><div class="token-row">
+        <span>Step 3</span>
+        <span>16px</span>
+      </div><div class="token-row">
+        <span>Step 4</span>
+        <span>24px</span>
+      </div><div class="token-row">
+        <span>Step 5</span>
+        <span>32px</span>
+      </div></div>
+    </div>
+    <div>
+      <h3 class="token-heading">Border Radius</h3>
+      <div class="radius-grid"><div class="radius-card">
+        <div class="radius-demo" style="border-radius:6px;"></div>
+        <div class="radius-name">Micro utility</div>
+        <div class="radius-value">6px</div>
+      </div><div class="radius-card">
+        <div class="radius-demo" style="border-radius:8px;"></div>
+        <div class="radius-name">Standard module</div>
+        <div class="radius-value">8px</div>
+      </div><div class="radius-card">
+        <div class="radius-demo" style="border-radius:999px;"></div>
+        <div class="radius-name">Category rail</div>
+        <div class="radius-value">999px</div>
+      </div><div class="radius-card">
+        <div class="radius-demo" style="border-radius:999px;"></div>
+        <div class="radius-name">CTA pill</div>
+        <div class="radius-value">999px</div>
+      </div></div>
+    </div>
+  </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Components</h2>
+              <p class="section-subtitle">Buttons and cards use the documented height, weight, radius, colors, and surface treatment.</p>
+              <div class="component-card">
+    <div class="button-row">
+      <span class="cta cta-primary">Primary action</span>
+      <span class="cta cta-secondary">Secondary action</span>
+    </div>
+    <div class="card-preview">
+      <h4>System Card Preview</h4>
+      <p>Measured surface, border, shadow, and spacing treatment.</p>
+    </div>
+  </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">System Notes</h2>
+              <p class="section-subtitle">Responsive behavior and depth rules stay visible while keeping the overall proportions calm and readable.</p>
+              <div class="split-card">
+    <div>
+      <h3 class="token-heading">Breakpoints</h3>
+      <div class="mini-grid"><div class="mini-row">
+            <div class="mini-label">Large</div>
+            <div class="mini-content"><strong>One focal idea and flat surfaces</strong><br />56px display, wide image composition</div>
+          </div><div class="mini-row">
+            <div class="mini-label">Medium</div>
+            <div class="mini-content"><strong>Hierarchy and action roles</strong><br />48px display, medium image crop</div>
+          </div><div class="mini-row">
+            <div class="mini-label">Small</div>
+            <div class="mini-content"><strong>Clear subject and compact actions</strong><br />32px display, one column, small image source</div>
+          </div></div>
+    </div>
+    <div>
+      <h3 class="token-heading">Elevation</h3>
+      <div class="mini-grid"><div class="mini-row">
+            <div class="mini-label">Hierarchy</div>
+            <div class="mini-content"><strong>One focal message per band</strong><br />Keep one dominant message at every viewport</div>
+          </div><div class="mini-row">
+            <div class="mini-label">Rhythm</div>
+            <div class="mini-content"><strong>Immersive sections, tight transitions</strong><br />Let section scale create rhythm</div>
+          </div><div class="mini-row">
+            <div class="mini-label">Density</div>
+            <div class="mini-content"><strong>Sparse story, compact utility</strong><br />Separate selling and utility density</div>
+          </div><div class="mini-row">
+            <div class="mini-label">Contrast</div>
+            <div class="mini-content"><strong>Flat surfaces replace shadows</strong><br />Build depth through surface contrast</div>
+          </div></div>
+    </div>
+  </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-inner">
+              <h2 class="section-title">Prompt Guide</h2>
+              <p class="section-subtitle">Prompt snippets are shown in the same typography and spacing language as the extracted design system.</p>
+              <div class="prompt-list"><div class="prompt-card"><strong>Prompt guide</strong><p>No example prompts detected.</p></div><div class="prompt-card"><strong>Ready-to-Use Prompt</strong><p>Create an original website for [subject] and [audience]. Retain the measured product-editorial hierarchy, flat neutral bands, compact actions, and explicit 56/48/32px display steps. Replace all source identity, copy, assets, icons, and page architecture. Use owned imagery with separate large, medium, and small compositions. Validate responsive hierarchy, image framing, contrast, keyboard focus, and asset health.</p></div></div>
+              <div class="split-card" style="margin-top:var(--space-4);">
+    <div>
+      <h3 class="token-heading">Do</h3>
+      <div class="mini-grid"><div class="mini-row"><div class="mini-label">Do</div><div class="mini-content">Art-direct images and preserve one dominant message.</div></div><div class="mini-row"><div class="mini-label">Do</div><div class="mini-content">Validate both desktop and mobile geometry.</div></div></div>
+    </div>
+    <div>
+      <h3 class="token-heading">Don't</h3>
+      <div class="mini-grid"><div class="mini-row"><div class="mini-label">Don't</div><div class="mini-content">Do not imitate a brand by copying its assets or page structure.</div></div><div class="mini-row"><div class="mini-label">Don't</div><div class="mini-content">Do not add decorative effects that contradict the measured flat system.</div></div></div>
+    </div>
+  </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="source-shell">
+          <article class="panel">
+            <div class="source-header">
+              <div class="file-tabs">
+                <span class="file-tab">design-system.md</span>
+                <span class="file-tab active">STYLE.md</span>
+                <span class="file-tab">Design JSON</span>
+                <span class="file-tab">CSS Variables</span>
+                <span class="file-tab">Design Tokens</span>
+              </div>
+            </div>
+            <div class="source-toolbar">
+              <div class="segmented" role="tablist" aria-label="View Switcher">
+                <button class="is-active" data-view="source" type="button">Source</button>
+                <button data-view="preview" type="button">Preview</button>
+              </div>
+              <div class="toolbar-actions">
+                <button class="ghost-button" id="copyButton" type="button">Copy</button>
+                <a class="ghost-button" href="../references/STYLE.md" download>Open .md</a>
+                <span class="copy-state" id="copyState"></span>
+              </div>
+            </div>
+            <div class="source-body">
+              <pre class="source-view" id="sourceView"># STYLE: Product Editorial
+
+&gt; A fictional, copyright-safe example showing how measured evidence becomes reusable design rules.
+
+## 0. Source &amp; Confidence
+
+| Item | Evidence |
+| --- | --- |
+| Source URL | `https://example.com/fictional-product` |
+| Viewports | 1440×900, 1024×768, 390×844 |
+| Measured profile | `style-profile.sample.json` |
+| Confidence | High for static visual rules; motion was not captured |
+
+## 1. Style In One Sentence
+
+A quiet product editorial system with strong type hierarchy, flat neutral bands, compact actions, and imagery treated as the primary proof.
+
+## 2. Design DNA
+
+| Dimension | Observation | Measured evidence | Transferable rule | Confidence |
+| --- | --- | --- | --- | --- |
+| Hierarchy | One focal message per band | 56/48/32px display steps | Keep one dominant message at every viewport | High |
+| Rhythm | Immersive sections, tight transitions | 640px hero, 12px band gaps | Let section scale create rhythm | High |
+| Density | Sparse story, compact utility | 44/48px navigation | Separate selling and utility density | High |
+| Contrast | Flat surfaces replace shadows | White, soft gray, ink, action blue | Build depth through surface contrast | High |
+| Shape | Square bands, pill actions | 0px and 999px radii | Reserve pills for commands | High |
+| Imagery | Subject remains large at each size | Separate large/medium/small sources | Art-direct instead of shrinking one image | High |
+| Motion | No direct evidence | No captured states | Keep motion optional and restrained | Low |
+
+## 3. Transferability Boundary
+
+### Retain
+
+- Hierarchy, surface logic, responsive type steps, image scale, and compact actions.
+
+### Reinterpret
+
+- Map the product showcase to the new audience&#39;s strongest proof.
+
+### Replace
+
+- Source identity, copy, page order, icons, photography, and campaign concepts.
+
+## 4. Color Logic
+
+| Role | Measured value | Paired with | Usage rule |
+| --- | --- | --- | --- |
+| Primary foreground | `rgb(28,28,30)` | Light surfaces | Headlines and primary copy |
+| Secondary foreground | `rgb(99,99,104)` | Light surfaces | Supporting copy |
+| Page surface | `rgb(255,255,255)` | Primary foreground | Page shell |
+| Alternate surface | `rgb(245,245,247)` | Primary foreground | Separate major ideas |
+| Action | `rgb(0,102,204)` | White | Primary commands only |
+| Divider | `rgb(214,214,219)` | Neutral surfaces | Utility structure |
+
+## 5. Typography Grammar
+
+| Role | Family | Desktop | Tablet | Mobile | Weight / line height | Rule |
+| --- | --- | --- | --- | --- | --- | --- |
+| Display | `system-ui` | 56px | 48px | 32px | 600 / 1.08 | Keep to two lines or fewer |
+| Section title | `system-ui` | 40px | 36px | 30px | 600 / 1.12 | Name one clear idea |
+| Supporting copy | `system-ui` | 21px | 19px | 17px | 400 / 1.4 | Constrain line length |
+| Navigation | `system-ui` | 12px | 12px | Icon-led | 400 / 1 | Keep global choices compact |
+
+## 6. Composition Grammar
+
+- Use flat full-width bands for primary stories.
+- Constrain navigation and utility information while allowing media to fill the band.
+- Use a two-column repeated-item grid on wide screens and a single sequence on mobile.
+- Keep approximately 12px between neighboring content bands.
+
+## 7. Image Direction
+
+| Property | Rule |
+| --- | --- |
+| Subject | Show the actual product or outcome clearly |
+| Framing | Use wide hero compositions and closer mobile crops |
+| Scale | Keep the subject dominant rather than adding decoration |
+| Responsive swap | Author large, medium, and small sources |
+| Avoid | Generic stock, blur, arbitrary cover crops, or source assets |
+
+## 8. Component &amp; Interaction Grammar
+
+- Navigation: 44px desktop and 48px mobile.
+- Actions: filled or outlined pills, 36–44px high.
+- Content bands: square corners and no decorative shadow.
+- Focus: visible keyboard focus with accessible contrast.
+
+## 9. Responsive Transformations
+
+| Condition | What stays invariant | What transforms |
+| --- | --- | --- |
+| Large | One focal idea and flat surfaces | 56px display, wide image composition |
+| Medium | Hierarchy and action roles | 48px display, medium image crop |
+| Small | Clear subject and compact actions | 32px display, one column, small image source |
+
+## 10. Do / Don&#39;t
+
+### Do
+
+- Art-direct images and preserve one dominant message.
+- Validate both desktop and mobile geometry.
+
+### Don&#39;t
+
+- Do not imitate a brand by copying its assets or page structure.
+- Do not add decorative effects that contradict the measured flat system.
+
+## 11. Transfer Prompt
+
+Create an original website for `[subject]` and `[audience]`. Retain the measured product-editorial hierarchy, flat neutral bands, compact actions, and explicit 56/48/32px display steps. Replace all source identity, copy, assets, icons, and page architecture. Use owned imagery with separate large, medium, and small compositions. Validate responsive hierarchy, image framing, contrast, keyboard focus, and asset health.
+
+## 12. Evidence Ledger
+
+| Claim | Evidence |
+| --- | --- |
+| Display scale | `style-profile.sample.json → viewports.*.displayHeading` |
+| Navigation | `style-profile.sample.json → viewports.*.navigation` |
+| Shape and colors | `style-profile.sample.json → styleSignals` |
+| Responsive media | `style-profile.sample.json → imagery` |
+</pre>
+              <article class="rendered-view" id="previewView" hidden><section><h2>0. Source &amp; Confidence</h2><table><thead><tr><th>Item</th><th>Evidence</th></tr></thead><tbody><tr><td>Source URL</td><td><code>https://example.com/fictional-product</code></td></tr><tr><td>Viewports</td><td>1440×900, 1024×768, 390×844</td></tr><tr><td>Measured profile</td><td><code>style-profile.sample.json</code></td></tr><tr><td>Confidence</td><td>High for static visual rules; motion was not captured</td></tr></tbody></table></section><section><h2>1. Style In One Sentence</h2><p>A quiet product editorial system with strong type hierarchy, flat neutral bands, compact actions, and imagery treated as the primary proof.</p></section><section><h2>2. Design DNA</h2><table><thead><tr><th>Dimension</th><th>Observation</th><th>Measured evidence</th><th>Transferable rule</th><th>Confidence</th></tr></thead><tbody><tr><td>Hierarchy</td><td>One focal message per band</td><td>56/48/32px display steps</td><td>Keep one dominant message at every viewport</td><td>High</td></tr><tr><td>Rhythm</td><td>Immersive sections, tight transitions</td><td>640px hero, 12px band gaps</td><td>Let section scale create rhythm</td><td>High</td></tr><tr><td>Density</td><td>Sparse story, compact utility</td><td>44/48px navigation</td><td>Separate selling and utility density</td><td>High</td></tr><tr><td>Contrast</td><td>Flat surfaces replace shadows</td><td>White, soft gray, ink, action blue</td><td>Build depth through surface contrast</td><td>High</td></tr><tr><td>Shape</td><td>Square bands, pill actions</td><td>0px and 999px radii</td><td>Reserve pills for commands</td><td>High</td></tr><tr><td>Imagery</td><td>Subject remains large at each size</td><td>Separate large/medium/small sources</td><td>Art-direct instead of shrinking one image</td><td>High</td></tr><tr><td>Motion</td><td>No direct evidence</td><td>No captured states</td><td>Keep motion optional and restrained</td><td>Low</td></tr></tbody></table></section><section><h2>3. Transferability Boundary</h2><h3>Retain</h3><ul><li>Hierarchy, surface logic, responsive type steps, image scale, and compact actions.</li></ul><h3>Reinterpret</h3><ul><li>Map the product showcase to the new audience&#39;s strongest proof.</li></ul><h3>Replace</h3><ul><li>Source identity, copy, page order, icons, photography, and campaign concepts.</li></ul></section><section><h2>4. Color Logic</h2><table><thead><tr><th>Role</th><th>Measured value</th><th>Paired with</th><th>Usage rule</th></tr></thead><tbody><tr><td>Primary foreground</td><td><code>rgb(28,28,30)</code></td><td>Light surfaces</td><td>Headlines and primary copy</td></tr><tr><td>Secondary foreground</td><td><code>rgb(99,99,104)</code></td><td>Light surfaces</td><td>Supporting copy</td></tr><tr><td>Page surface</td><td><code>rgb(255,255,255)</code></td><td>Primary foreground</td><td>Page shell</td></tr><tr><td>Alternate surface</td><td><code>rgb(245,245,247)</code></td><td>Primary foreground</td><td>Separate major ideas</td></tr><tr><td>Action</td><td><code>rgb(0,102,204)</code></td><td>White</td><td>Primary commands only</td></tr><tr><td>Divider</td><td><code>rgb(214,214,219)</code></td><td>Neutral surfaces</td><td>Utility structure</td></tr></tbody></table></section><section><h2>5. Typography Grammar</h2><table><thead><tr><th>Role</th><th>Family</th><th>Desktop</th><th>Tablet</th><th>Mobile</th><th>Weight / line height</th><th>Rule</th></tr></thead><tbody><tr><td>Display</td><td><code>system-ui</code></td><td>56px</td><td>48px</td><td>32px</td><td>600 / 1.08</td><td>Keep to two lines or fewer</td></tr><tr><td>Section title</td><td><code>system-ui</code></td><td>40px</td><td>36px</td><td>30px</td><td>600 / 1.12</td><td>Name one clear idea</td></tr><tr><td>Supporting copy</td><td><code>system-ui</code></td><td>21px</td><td>19px</td><td>17px</td><td>400 / 1.4</td><td>Constrain line length</td></tr><tr><td>Navigation</td><td><code>system-ui</code></td><td>12px</td><td>12px</td><td>Icon-led</td><td>400 / 1</td><td>Keep global choices compact</td></tr></tbody></table></section><section><h2>6. Composition Grammar</h2><ul><li>Use flat full-width bands for primary stories.</li><li>Constrain navigation and utility information while allowing media to fill the band.</li><li>Use a two-column repeated-item grid on wide screens and a single sequence on mobile.</li><li>Keep approximately 12px between neighboring content bands.</li></ul></section><section><h2>7. Image Direction</h2><table><thead><tr><th>Property</th><th>Rule</th></tr></thead><tbody><tr><td>Subject</td><td>Show the actual product or outcome clearly</td></tr><tr><td>Framing</td><td>Use wide hero compositions and closer mobile crops</td></tr><tr><td>Scale</td><td>Keep the subject dominant rather than adding decoration</td></tr><tr><td>Responsive swap</td><td>Author large, medium, and small sources</td></tr><tr><td>Avoid</td><td>Generic stock, blur, arbitrary cover crops, or source assets</td></tr></tbody></table></section><section><h2>8. Component &amp; Interaction Grammar</h2><ul><li>Navigation: 44px desktop and 48px mobile.</li><li>Actions: filled or outlined pills, 36–44px high.</li><li>Content bands: square corners and no decorative shadow.</li><li>Focus: visible keyboard focus with accessible contrast.</li></ul></section><section><h2>9. Responsive Transformations</h2><table><thead><tr><th>Condition</th><th>What stays invariant</th><th>What transforms</th></tr></thead><tbody><tr><td>Large</td><td>One focal idea and flat surfaces</td><td>56px display, wide image composition</td></tr><tr><td>Medium</td><td>Hierarchy and action roles</td><td>48px display, medium image crop</td></tr><tr><td>Small</td><td>Clear subject and compact actions</td><td>32px display, one column, small image source</td></tr></tbody></table></section><section><h2>10. Do / Don&#39;t</h2><h3>Do</h3><ul><li>Art-direct images and preserve one dominant message.</li><li>Validate both desktop and mobile geometry.</li></ul><h3>Don&#39;t</h3><ul><li>Do not imitate a brand by copying its assets or page structure.</li><li>Do not add decorative effects that contradict the measured flat system.</li></ul></section><section><h2>11. Transfer Prompt</h2><p>Create an original website for <code>[subject]</code> and <code>[audience]</code>. Retain the measured product-editorial hierarchy, flat neutral bands, compact actions, and explicit 56/48/32px display steps. Replace all source identity, copy, assets, icons, and page architecture. Use owned imagery with separate large, medium, and small compositions. Validate responsive hierarchy, image framing, contrast, keyboard focus, and asset health.</p></section><section><h2>12. Evidence Ledger</h2><table><thead><tr><th>Claim</th><th>Evidence</th></tr></thead><tbody><tr><td>Display scale</td><td><code>style-profile.sample.json → viewports.*.displayHeading</code></td></tr><tr><td>Navigation</td><td><code>style-profile.sample.json → viewports.*.navigation</code></td></tr><tr><td>Shape and colors</td><td><code>style-profile.sample.json → styleSignals</code></td></tr><tr><td>Responsive media</td><td><code>style-profile.sample.json → imagery</code></td></tr></tbody></table></section></article>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const sourceView = document.getElementById("sourceView");
+      const previewView = document.getElementById("previewView");
+      const copyButton = document.getElementById("copyButton");
+      const copyState = document.getElementById("copyState");
+      const viewButtons = document.querySelectorAll("[data-view]");
+
+      function setActiveView(view) {
+        const showSource = view === "source";
+        sourceView.hidden = !showSource;
+        previewView.hidden = showSource;
+        viewButtons.forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.view === view);
+        });
+      }
+
+      viewButtons.forEach((button) => {
+        button.addEventListener("click", () => setActiveView(button.dataset.view));
+      });
+
+      copyButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(sourceView.textContent || "");
+          copyState.textContent = "Copied";
+        } catch (error) {
+          copyState.textContent = "Clipboard unavailable";
+        }
+
+        setTimeout(() => {
+          copyState.textContent = "";
+        }, 1400);
+      });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "html2style",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Capture website design evidence and package transferable visual rules for AI agents",
   "type": "module",
   "license": "MIT",

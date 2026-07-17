@@ -30,6 +30,7 @@ test("CLI exposes portable commands", () => {
   assert.match(result.stdout, /doctor/);
   assert.match(result.stdout, /extract/);
   assert.match(result.stdout, /profile/);
+  assert.match(result.stdout, /skill/);
   assert.match(result.stdout, /bundle/);
   assert.match(result.stdout, /assets/);
   assert.match(result.stdout, /audit/);

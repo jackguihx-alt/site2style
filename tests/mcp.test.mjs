@@ -30,6 +30,7 @@ test("MCP server exposes the portable workflow", { timeout: 30000 }, async () =>
         "browser_doctor",
         "extract_website_evidence",
         "extract_style_profile",
+        "create_style_skill",
         "bundle_design_package",
         "extract_icon_library",
         "render_design_preview",

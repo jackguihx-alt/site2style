@@ -1,4 +1,4 @@
 interface:
   display_name: "HTML2Style"
-  short_description: "把网站转成可复用、可验证的设计语言包"
-  default_prompt: "使用 $html2style 采集这个网站，并按我的语言生成一套可跨 session 复用的设计语言包。"
+  short_description: "把网站转成可复用的设计风格 Skill 和 HTML 预览"
+  default_prompt: "使用 $html2style 提取这个网站的网页风格，并生成可复用的设计风格 Skill 和 HTML 预览。"

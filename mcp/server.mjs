@@ -10,10 +10,10 @@ import { z } from "zod";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const server = new McpServer(
-  { name: "html2style", version: "0.5.0" },
+  { name: "html2style", version: "0.6.0" },
   {
     instructions:
-      "Use browser_doctor first, then extract_website_evidence. Follow the user's language for human-facing files: use zh-CN for Chinese users and en for English users, while keeping tool names, filenames, and JSON fields in English. For style-only work, call extract_style_profile and synthesize STYLE.md before any implementation. Generate DESIGN.md for replica-specific detail. For complete replicas, validate all asset URLs and audit original versus replica evidence before declaring success. For original sites inspired by a reference, transfer measured design principles while replacing source branding, content, assets, and information architecture.",
+      "Use browser_doctor first, then extract_website_evidence. Follow the user's language for human-facing files: use zh-CN for Chinese users and en for English users, while keeping tool names, filenames, and JSON fields in English. For style-only work, call extract_style_profile, synthesize STYLE.md, render the HTML preview, and finish with create_style_skill. Generate DESIGN.md only for replica-specific detail. For complete replicas, validate all asset URLs and audit original versus replica evidence before declaring success. For original sites inspired by a reference, transfer measured design principles while replacing source branding, content, assets, and information architecture.",
   }
 );
 
@@ -75,6 +75,37 @@ server.registerTool(
     const args = [resolvedEvidence, resolvedOutput];
     if (markdownPath) args.push("--markdown", path.resolve(process.cwd(), markdownPath));
     return toolResult(await runScript("scripts/extract-style-profile.mjs", args));
+  }
+);
+
+server.registerTool(
+  "create_style_skill",
+  {
+    title: "Create reusable design-style Skill",
+    description: "Package STYLE.md, measured profile, and HTML preview as a standard portable Skill for reuse in later Agent sessions.",
+    inputSchema: z.object({
+      outputDir: z.string().min(1),
+      stylePath: z.string().min(1),
+      profilePath: z.string().min(1),
+      previewPath: z.string().min(1),
+      name: z.string().optional(),
+      skillName: z.string().optional(),
+      locale: z.enum(["zh-CN", "en"]).default("zh-CN"),
+      measurementsPath: z.string().optional(),
+    }),
+  },
+  async ({ outputDir, stylePath, profilePath, previewPath, name, skillName, locale, measurementsPath }) => {
+    const args = [
+      path.resolve(process.cwd(), outputDir),
+      "--style", path.resolve(process.cwd(), stylePath),
+      "--profile", path.resolve(process.cwd(), profilePath),
+      "--preview", path.resolve(process.cwd(), previewPath),
+      "--locale", locale,
+    ];
+    if (name) args.push("--name", name);
+    if (skillName) args.push("--skill-name", skillName);
+    if (measurementsPath) args.push("--measurements", path.resolve(process.cwd(), measurementsPath));
+    return jsonScriptResult(await runScript("scripts/create-style-skill.mjs", args));
   }
 );
 

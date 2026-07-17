@@ -18,6 +18,7 @@ const required = [
   "mcp/server.mjs",
   "scripts/extract-browser-evidence.mjs",
   "scripts/extract-style-profile.mjs",
+  "scripts/create-style-skill.mjs",
   "scripts/create-design-package.mjs",
   "scripts/check-browser-tooling.mjs",
   "scripts/validate-asset-urls.mjs",
@@ -37,6 +38,11 @@ const required = [
   "examples/product-editorial/design-package/START-HERE.html",
   "examples/product-editorial/design-package/AGENT-HANDOFF.md",
   "examples/product-editorial/design-package/manifest.json",
+  "examples/product-editorial/product-editorial-style/SKILL.md",
+  "examples/product-editorial/product-editorial-style/agents/openai.yaml",
+  "examples/product-editorial/product-editorial-style/assets/preview.html",
+  "examples/product-editorial/product-editorial-style/references/STYLE.md",
+  "examples/product-editorial/product-editorial-style/references/style-profile.json",
 ];
 
 for (const relativePath of required) {
@@ -69,12 +75,13 @@ const help = spawnSync(process.execPath, [path.join(root, "bin/html2style.mjs"),
   cwd: root,
   encoding: "utf8",
 });
-if (help.status !== 0 || !help.stdout.includes("Agent-neutral") || !help.stdout.includes("profile") || !help.stdout.includes("bundle") || !help.stdout.includes("assets") || !help.stdout.includes("audit")) {
+if (help.status !== 0 || !help.stdout.includes("Agent-neutral") || !help.stdout.includes("profile") || !help.stdout.includes("skill") || !help.stdout.includes("bundle") || !help.stdout.includes("assets") || !help.stdout.includes("audit")) {
   throw new Error("CLI help smoke test failed");
 }
 
 JSON.parse(fs.readFileSync(path.join(root, "examples/product-editorial/design-package/style-profile.json"), "utf8"));
 JSON.parse(fs.readFileSync(path.join(root, "examples/product-editorial/design-package/manifest.json"), "utf8"));
+JSON.parse(fs.readFileSync(path.join(root, "examples/product-editorial/product-editorial-style/references/style-profile.json"), "utf8"));
 
 console.log(`Validated ${listFiles(root).filter((filePath) => filePath.endsWith(".mjs")).length} JavaScript modules.`);
 console.log("Portable CLI, MCP entry point, Skill metadata, and required assets are present.");
